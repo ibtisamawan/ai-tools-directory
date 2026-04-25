@@ -1,0 +1,12 @@
+{
+  "name": "ai-tools-directory-root",
+  "private": true,
+  "scripts": {
+    "start": "node backend/server.js",
+    "build": "cd backend && npm install",
+    "install-backend": "cd backend && npm install"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
