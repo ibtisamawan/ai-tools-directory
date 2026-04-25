@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { HiArrowLeft } from 'react-icons/hi';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 export default function Register() {
   const { darkMode } = useTheme();
@@ -14,13 +15,30 @@ export default function Register() {
     confirmPassword: '' 
   });
 
-  const handleSubmit = (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       return toast.error('Passwords do not match');
     }
-    toast.success('Account created! Please log in.');
-    navigate('/login');
+    if (formData.password.length < 6) {
+      return toast.error('Password must be at least 6 characters');
+    }
+    setIsLoading(true);
+    try {
+      await axios.post('/api/auth/register', {
+        username: formData.name.replace(/\s+/g, '').toLowerCase(),
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success('Account created! Please log in.');
+      navigate('/login');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Registration failed. Try a different username/email.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const inputClass = `w-full px-4 py-3 bg-[#1F2937] border border-[#374151] rounded-xl text-white text-sm outline-none focus:border-primary transition-all`;
@@ -94,8 +112,8 @@ export default function Register() {
             <label htmlFor="terms" className="text-xs text-gray-500">I agree to the <Link to="#" className="text-primary-light hover:underline">Terms & Conditions</Link></label>
           </div>
 
-          <button className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-black rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all">
-            Get Started
+          <button type="submit" disabled={isLoading} className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-black rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-60">
+            {isLoading ? 'Creating Account...' : 'Get Started'}
           </button>
         </form>
 

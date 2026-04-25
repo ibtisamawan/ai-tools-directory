@@ -16,7 +16,7 @@ export default function Home() {
   const [recent, setRecent] = useState([]);
   const [toolOfDay, setToolOfDay] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [filteredLoading, setFilteredLoading] = useState(false);
   const revealRefs = useRef([]);
   revealRefs.current = [];
@@ -47,7 +47,7 @@ export default function Home() {
     const fetchFilteredTools = async () => {
       setFilteredLoading(true);
       try {
-        const categoryParam = selectedCategory === 'All' ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
+        const categoryParam = (selectedCategory === 'All' || selectedCategory === '') ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
         const res = await API.get(`/tools?limit=6&sort=newest${categoryParam}`);
         setRecent(res.data.data);
       } catch (err) {
@@ -82,11 +82,12 @@ export default function Home() {
   };
 
   const handleCategorySelect = (cat) => {
+    setSelectedCategory(cat);
     if (cat === 'All') {
       navigate('/tools');
     } else {
       const slug = cat.toLowerCase().replace(/ /g, '-');
-      navigate(`/category/${slug}`);
+      navigate(`/category/${encodeURIComponent(slug)}`);
     }
   };
 

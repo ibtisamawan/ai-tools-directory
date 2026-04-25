@@ -97,7 +97,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {categories.map(cat => (
                 <li key={cat}>
-                  <Link to={`/category/${cat.toLowerCase().replace(/ /g, '-')}`} className="group flex items-center gap-2 text-gray-400 text-sm hover:text-white transition-all duration-300">
+                  <Link to={`/category/${encodeURIComponent(cat.toLowerCase().replace(/ /g, '-'))}`} className="group flex items-center gap-2 text-gray-400 text-sm hover:text-white transition-all duration-300">
                     <FaChevronRight className="text-[10px] text-secondary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                     {cat}
                   </Link>

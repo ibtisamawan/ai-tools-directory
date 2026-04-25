@@ -18,8 +18,12 @@ export default function Category() {
   const displayName = name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   useEffect(() => {
-    const fetchCategoryMeta = async () => {
+    const initData = async () => {
+      setLoading(true);
+      let exactCategoryName = name; // Fallback to URL slug
+      
       try {
+        // First, fetch categories to get the exact database name and metadata
         const res = await API.get('/categories');
         if (res.data.success) {
           const found = res.data.data.find(c => 
@@ -28,14 +32,25 @@ export default function Category() {
           );
           if (found) {
             setMeta({ icon: found.icon, desc: found.description });
+            exactCategoryName = found.name; // Use the exact name (e.g. "3D & Animation")
           }
         }
       } catch (err) {
         console.error('Failed to fetch category meta:', err);
       }
+
+      // Then, fetch the tools using the EXACT category name, properly URL encoded
+      try {
+        const res = await API.get(`/tools/category/${encodeURIComponent(exactCategoryName)}?sort=${sort}&limit=50`);
+        setTools(res.data.data);
+      } catch (err) { 
+        console.error('Failed to fetch tools:', err); 
+      }
+      
+      setLoading(false);
     };
-    fetchCategoryMeta();
-    fetchTools();
+
+    initData();
   }, [name, sort]);
 
   // Scroll animations
@@ -48,15 +63,6 @@ export default function Category() {
     revealRefs.current.forEach(el => el && observer.observe(el));
     return () => observer.disconnect();
   }, [tools, loading]);
-
-  const fetchTools = async () => {
-    setLoading(true);
-    try {
-      const res = await API.get(`/tools/category/${name}?sort=${sort}&limit=50`);
-      setTools(res.data.data);
-    } catch (err) { console.error(err); }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen">

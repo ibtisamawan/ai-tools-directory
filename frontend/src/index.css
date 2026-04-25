@@ -57,7 +57,7 @@ html {
   .premium-card {
     background: linear-gradient(145deg, #111827, #0d1424);
     border: 1px solid #1F2937;
-    @apply transition-all duration-300 rounded-[16px] overflow-hidden;
+    @apply transition-all duration-300 rounded-[16px] relative;
   }
 
   .premium-card:hover {

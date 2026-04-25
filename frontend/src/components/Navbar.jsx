@@ -9,8 +9,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Simulated user state - in a real app this would come from AuthContext
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('user')) || null; } catch { return null; }
+  });
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   useEffect(() => {
@@ -22,13 +23,21 @@ export default function Navbar() {
   const links = [
     { to: '/', label: 'Home' },
     { to: '/tools', label: 'Tools' },
-    { to: '/category/chatbots', label: 'Categories' }, // Simplification for nav
+    { to: '/category/chatbots', label: 'Chatbots' },
     { to: '/submit', label: 'Submit Tool' },
   ];
 
   const isActive = (path) => location.pathname === path;
 
-  const userInitials = user ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'JD';
+  const userInitials = user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : (user?.username ? user.username.slice(0,2).toUpperCase() : '?');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('adminToken');
+    setUser(null);
+    setShowUserDropdown(false);
+  };
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-3' : 'bg-transparent py-5'}`}>
@@ -94,7 +103,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-3 w-48 premium-card p-2 shadow-2xl">
                     <Link to="/admin" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">My Dashboard</Link>
                     <Link to="/tools" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Saved Tools</Link>
-                    <button className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg">Logout</button>
+                    <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg">Logout</button>
                   </div>
                 )}
               </div>

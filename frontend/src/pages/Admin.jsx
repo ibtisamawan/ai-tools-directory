@@ -124,7 +124,7 @@ export default function Admin() {
       {/* Tabs */}
       <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
         {tabs.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${tab === t.key ? 'bg-primary text-white shadow-lg shadow-primary/25' : darkMode ? 'bg-dark-card text-gray-300 hover:bg-white/10' : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'}`}>
+          <button key={t.key} onClick={() => setTab(t.key)} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${tab === t.key ? 'bg-primary text-white shadow-lg shadow-primary/25' : darkMode ? 'bg-dark-card text-gray-300 hover:bg-primary/20 hover:text-white' : 'bg-white text-gray-600 hover:bg-primary/10 hover:text-primary border border-gray-200'}`}>
             <span>{t.icon}</span>{t.label}
           </button>
         ))}

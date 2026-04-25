@@ -92,7 +92,7 @@ export default function Tools() {
   };
 
   const filterItemClass = (active) => `block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-    active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-400 hover:text-white hover:bg-white/5'
+    active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-400 hover:text-white hover:bg-primary/15 hover:border-primary/30 border border-transparent'
   }`;
 
   return (
@@ -117,13 +117,13 @@ export default function Tools() {
               <div className={`${showFilters ? 'block' : 'hidden lg:block'} space-y-1`}>
                 {categories.map(c => (
                   <button key={c.name} onClick={() => { 
-                    setCategory(c.name === 'All' ? '' : c.name); 
+                    setCategory(c.name); 
                     setPage(1);
                   }}
-                    className={filterItemClass((c.name === 'All' && !category) || c.name === category)}>
+                    className={filterItemClass(c.name === category)}>
                     <span className="flex justify-between items-center w-full">
                       <span>{c.name}</span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${((c.name === 'All' && !category) || c.name === category) ? 'bg-white/20' : 'bg-white/5'}`}>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${c.name === category ? 'bg-white/20' : 'bg-white/5'}`}>
                         {c.toolCount || 0}
                       </span>
                     </span>
@@ -136,8 +136,8 @@ export default function Tools() {
               <h3 className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Pricing</h3>
               <div className="space-y-1">
                 {pricingOpts.map(p => (
-                  <button key={p} onClick={() => { setPricing(p === 'All' ? '' : p); setPage(1); }}
-                    className={filterItemClass((p === 'All' && !pricing) || p === pricing)}>
+                  <button key={p} onClick={() => { setPricing(p); setPage(1); }}
+                    className={filterItemClass(p === pricing)}>
                     {p}
                   </button>
                 ))}

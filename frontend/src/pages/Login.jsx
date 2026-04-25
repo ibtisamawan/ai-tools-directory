@@ -3,21 +3,62 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { HiArrowLeft } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export default function Login() {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setIsLoading(true);
+        const res = await axios.post('/api/auth/google', { 
+          access_token: tokenResponse.access_token 
+        });
+        
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+          toast.success('Logged in with Google!');
+          navigate('/');
+        }
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Google Login failed');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: () => toast.error('Google Login was canceled or failed')
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic would go here. For now, simulate success
-    toast.success('Logged in successfully!');
-    navigate('/');
+    try {
+      setIsLoading(true);
+      const res = await axios.post('/api/auth/login', {
+        username: formData.email, // Frontend uses email as username for now
+        password: formData.password
+      });
+
+      if (res.data.success) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+        toast.success('Logged in successfully!');
+        navigate('/');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const inputClass = `w-full px-4 py-3 bg-[#1F2937] border border-[#374151] rounded-xl text-white text-sm outline-none focus:border-primary transition-all`;
+  const inputClass = `w-full px-4 py-3 bg-[#1F2937] border border-[#374151] rounded-xl text-white text-sm outline-none focus:border-primary transition-all disabled:opacity-50`;
 
   return (
     <div className="min-h-screen hero-radial-bg flex flex-col items-center justify-center px-4 pt-20">
@@ -32,8 +73,11 @@ export default function Login() {
         </div>
 
         {/* Google Login */}
-        <button className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all mb-6">
-          <FcGoogle size={22} /> Login with Google
+        <button 
+          onClick={() => googleLogin()}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all mb-6 disabled:opacity-70">
+          <FcGoogle size={22} /> {isLoading ? 'Please wait...' : 'Login with Google'}
         </button>
 
         <div className="flex items-center gap-4 mb-6">
@@ -69,8 +113,8 @@ export default function Login() {
             />
           </div>
 
-          <button className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-black rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all">
-            Sign In
+          <button type="submit" disabled={isLoading} className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-black rounded-xl hover:shadow-xl hover:shadow-primary/20 transition-all disabled:opacity-60">
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 

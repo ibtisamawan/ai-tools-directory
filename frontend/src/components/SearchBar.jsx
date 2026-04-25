@@ -31,7 +31,12 @@ export default function SearchBar({ large = false, onSearch, initialValue = '' }
         <input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            if (e.target.value === '' && onSearch) {
+              onSearch('');
+            }
+          }}
           placeholder="Search for AI tools (e.g. video editor, chatbot)..."
           className="flex-1 bg-transparent py-3 sm:py-4 px-4 text-white text-sm sm:text-base outline-none placeholder-gray-500 font-medium"
         />

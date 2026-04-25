@@ -16,7 +16,7 @@ const categories = [
   { name: "Audio", icon: "🎵", description: "AI audio and voice generation tools", toolCount: 2 },
   { name: "Coding", icon: "💻", description: "AI coding assistants and developer tools", toolCount: 11 },
   { name: "Productivity", icon: "⚡", description: "AI tools to boost productivity", toolCount: 1 },
-  { name: "Design", icon: "🖌️", description: "AI graphic and UI design tools", toolCount: 1 },
+  { name: "Design", icon: "🖌️", description: "AI graphic and UI design tools", toolCount: 6 },
   { name: "Education", icon: "🎓", description: "AI tools for learning and education", toolCount: 10 },
   { name: "Marketing", icon: "📈", description: "AI marketing and SEO tools", toolCount: 10 },
   { name: "Healthcare", icon: "🏥", description: "AI tools for health and medical use", toolCount: 8 },
@@ -84,8 +84,13 @@ const tools = [
   // ============ PRODUCTIVITY (1) ============
   { name: "Notion AI", slug: "notion-ai", website: "notion.so", category: "Productivity", pricing: "Freemium", rating: 4.5, totalReviews: 1100, featured: true, approved: true, shortDescription: "AI workspace for notes docs wikis and project management.", tags: ["productivity", "notes", "docs", "workspace"] },
 
-  // ============ DESIGN (1) ============
+  // ============ DESIGN (6) ============
   { name: "Canva AI", slug: "canva-ai", website: "canva.com", category: "Design", pricing: "Freemium", rating: 4.7, totalReviews: 1700, featured: true, approved: true, shortDescription: "AI graphic design platform for creating stunning visuals easily.", tags: ["design", "graphics", "templates", "social media"] },
+  { name: "Uizard", slug: "uizard", website: "uizard.io", category: "Design", pricing: "Freemium", rating: 4.6, totalReviews: 890, featured: false, approved: true, shortDescription: "AI UI design tool that converts wireframes into prototypes.", tags: ["design", "UI", "prototyping", "wireframes"] },
+  { name: "Looka", slug: "looka", website: "looka.com", category: "Design", pricing: "Paid", rating: 4.5, totalReviews: 640, featured: false, approved: true, shortDescription: "AI logo maker and brand identity design platform.", tags: ["design", "logo", "branding", "graphics"] },
+  { name: "Designs.ai", slug: "designs-ai", website: "designs.ai", category: "Design", pricing: "Freemium", rating: 4.4, totalReviews: 520, featured: false, approved: true, shortDescription: "AI creative suite for logos, videos, and graphic design.", tags: ["design", "suite", "graphics", "creative"] },
+  { name: "Galileo AI", slug: "galileo-ai", website: "usegalileo.ai", category: "Design", pricing: "Paid", rating: 4.6, totalReviews: 310, featured: false, approved: true, shortDescription: "AI tool for generating high-fidelity UI designs from text.", tags: ["design", "UI", "generation", "interface"] },
+  { name: "Framer AI", slug: "framer-ai", website: "framer.com", category: "Design", pricing: "Freemium", rating: 4.8, totalReviews: 1200, featured: true, approved: true, shortDescription: "AI website builder for designing and publishing stunning sites.", tags: ["design", "web design", "website", "builder"] },
 
   // ============ EDUCATION (10) ============
   { name: "Khanmigo", slug: "khanmigo", website: "khanacademy.org", category: "Education", pricing: "Free", rating: 4.7, totalReviews: 780, featured: false, approved: true, shortDescription: "AI tutor by Khan Academy for math science and coding.", tags: ["education", "tutoring", "math", "students"] },
