@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { HiStar, HiExternalLink, HiShare, HiClipboardCopy } from 'react-icons/hi';
 
 export default function ToolDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { darkMode } = useTheme();
   const [tool, setTool] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -20,12 +20,12 @@ export default function ToolDetail() {
   useEffect(() => {
     fetchTool();
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [slug]);
 
   const fetchTool = async () => {
     setLoading(true);
     try {
-      const res = await API.get(`/tools/${id}`);
+      const res = await API.get(`/tools/${slug}`);
       setTool(res.data.data);
       setReviews(res.data.data.reviews || []);
       setSimilar(res.data.data.similarTools || []);
