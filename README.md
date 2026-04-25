@@ -61,7 +61,7 @@ npm run dev
 ### 3. Access the app
 
 - Frontend: http://localhost:5173
-- Backend API: http://localhost:5000/api
+- Backend API: https://ai-tools-directory-production-be45.up.railway.app/api
 - Admin Login: username: `admin`, password: `admin123`
 
 ## API Endpoints
