@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import SearchBar from '../components/SearchBar';
 import CategoryFilter from '../components/CategoryFilter';
@@ -10,35 +10,53 @@ import API from '../api';
 import { HiSparkles, HiTrendingUp, HiClock, HiStar } from 'react-icons/hi';
 
 export default function Home() {
+  const navigate = useNavigate();
   const { darkMode } = useTheme();
   const [featured, setFeatured] = useState([]);
   const [recent, setRecent] = useState([]);
   const [toolOfDay, setToolOfDay] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [filteredLoading, setFilteredLoading] = useState(false);
   const revealRefs = useRef([]);
   revealRefs.current = [];
+  const resultsRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
       try {
         const [featRes, allRes] = await Promise.all([
           API.get('/tools?featured=true&limit=3'),
           API.get('/tools?limit=12&sort=newest')
         ]);
         setFeatured(featRes.data.data);
-        setRecent(allRes.data.data.slice(0, 6));
         
         if (allRes.data.data.length > 0) {
           const dayIndex = new Date().getDate() % allRes.data.data.length;
           setToolOfDay(allRes.data.data[dayIndex]);
         }
       } catch (err) {
-        console.error('Failed to fetch tools:', err);
+        console.error('Failed to fetch initial tools:', err);
       }
       setLoading(false);
     };
-    fetchData();
+    fetchInitialData();
   }, []);
+
+  useEffect(() => {
+    const fetchFilteredTools = async () => {
+      setFilteredLoading(true);
+      try {
+        const categoryParam = selectedCategory === 'All' ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
+        const res = await API.get(`/tools?limit=6&sort=newest${categoryParam}`);
+        setRecent(res.data.data);
+      } catch (err) {
+        console.error('Failed to fetch filtered tools:', err);
+      }
+      setFilteredLoading(false);
+    };
+    fetchFilteredTools();
+  }, [selectedCategory]);
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -63,8 +81,17 @@ export default function Home() {
     }
   };
 
+  const handleCategorySelect = (cat) => {
+    if (cat === 'All') {
+      navigate('/tools');
+    } else {
+      const slug = cat.toLowerCase().replace(/ /g, '-');
+      navigate(`/category/${slug}`);
+    }
+  };
+
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative hero-radial-bg overflow-hidden min-h-[85vh] flex items-center">
         {/* Background Depth Circles */}
@@ -74,7 +101,7 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="animate-fade-in-up">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-8 bg-white/5 text-primary-light border border-primary/20 backdrop-blur-md">
-              <HiSparkles className="text-yellow-400" /> Discover 200+ AI Tools
+              <HiSparkles className="text-yellow-400" /> Discover 120+ AI Tools
             </span>
             
             <h1 className="font-extrabold tracking-tight mb-8 leading-[1.1] text-white">
@@ -100,8 +127,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 divide-x-0 md:divide-x divide-primary/10">
             {[
-              { val: '200+', label: 'AI Tools' },
-              { val: '10+', label: 'Categories' },
+              { val: '120+', label: 'AI Tools' },
+              { val: '28', label: 'Categories' },
               { val: '50K+', label: 'Users' },
               { val: '4.8★', label: 'Avg Rating' }
             ].map((s, i) => (
@@ -163,20 +190,26 @@ export default function Home() {
       {/* Category Filter */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 reveal" ref={addToRefs}>
         <div className="mb-10">
-          <CategoryFilter />
+          <CategoryFilter selected={selectedCategory} onSelect={handleCategorySelect} />
         </div>
       </section>
 
       {/* Recently Added */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal" ref={addToRefs}>
+      <section ref={(el) => { resultsRef.current = el; addToRefs(el); }} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal">
         <div className="flex items-center gap-3 mb-10 border-l-4 border-secondary pl-4">
-          <h2 className="text-2xl sm:text-3xl font-black text-white">🕐 Recently Added</h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-white">
+            {selectedCategory === 'All' ? '🕐 Recently Added' : `✨ ${selectedCategory} Tools`}
+          </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
+          {filteredLoading ? (
             [...Array(6)].map((_, i) => <CardSkeleton key={i} />)
-          ) : (
+          ) : recent.length > 0 ? (
             recent.map(tool => <ToolCard key={tool._id} tool={tool} />)
+          ) : (
+            <div className="col-span-full py-20 text-center">
+              <p className="text-gray-500 font-bold">No tools found in this category yet.</p>
+            </div>
           )}
         </div>
       </section>

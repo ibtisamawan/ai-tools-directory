@@ -39,11 +39,14 @@ export default function ToolCard({ tool }) {
 
   // Domain extraction for Clearbit
   const getDomain = (url) => {
+    if (!url) return '';
     try {
-      const domain = new URL(url).hostname.replace('www.', '');
+      // Ensure url has a protocol for URL constructor
+      const absoluteUrl = url.startsWith('http') ? url : `https://${url}`;
+      const domain = new URL(absoluteUrl).hostname.replace('www.', '');
       return domain;
     } catch (e) {
-      return '';
+      return url.replace('www.', ''); // Fallback for simple strings
     }
   };
 
@@ -89,9 +92,11 @@ export default function ToolCard({ tool }) {
         <div className="h-px bg-[#1F2937] w-full mb-4"></div>
 
         {/* Description */}
-        <p className="text-sm text-gray-400 leading-relaxed line-clamp-2 h-10 mb-4">
-          {tool.shortDescription}
-        </p>
+        <div className="h-12 mb-4 overflow-hidden">
+          <p className="text-sm text-gray-400 leading-relaxed line-clamp-2">
+            {tool.shortDescription}
+          </p>
+        </div>
 
         {/* Divider */}
         <div className="h-px bg-[#1F2937] w-full mb-4"></div>
@@ -109,8 +114,8 @@ export default function ToolCard({ tool }) {
             </div>
           </div>
           
-          <div className="flex items-center gap-1 text-xs font-bold text-primary-light group-hover:translate-x-1 transition-transform">
-            Visit <HiExternalLink size={14} />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-primary-light group-hover:gap-2.5 transition-all">
+            Explore <HiExternalLink size={14} />
           </div>
         </div>
 

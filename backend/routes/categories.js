@@ -10,8 +10,12 @@ router.get('/', async (req, res) => {
     const categories = await Category.find().sort({ name: 1 });
 
     // Update tool counts
+    const escapeRegex = (string) => string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     for (let cat of categories) {
-      const count = await Tool.countDocuments({ category: cat.name, approved: true });
+      const count = await Tool.countDocuments({ 
+        category: { $regex: new RegExp(escapeRegex(cat.name), 'i') }, 
+        approved: true 
+      });
       if (cat.toolCount !== count) {
         cat.toolCount = count;
         await cat.save();

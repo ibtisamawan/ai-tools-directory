@@ -18,10 +18,10 @@ export default function Tools() {
   const [pricing, setPricing] = useState('');
   const [sort, setSort] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
+  const [totalTools, setTotalTools] = useState(0);
+  const [categories, setCategories] = useState([{ name: 'All', toolCount: 0 }]);
   const revealRefs = useRef([]);
   revealRefs.current = [];
-
-  const categories = ['All', 'Chatbots', 'Writing', 'Image Generation', 'Video', 'Coding', 'Audio', 'Productivity', 'Marketing', 'Education', 'Design'];
   const pricingOpts = ['All', 'Free', 'Paid', 'Freemium'];
   const sortOpts = [
     { value: 'newest', label: 'Newest' },
@@ -29,6 +29,22 @@ export default function Tools() {
     { value: 'top-rated', label: 'Top Rated' },
     { value: 'alphabetical', label: 'A-Z' },
   ];
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          // Calculate total tools for "All" category
+          const total = res.data.data.reduce((sum, c) => sum + (c.toolCount || 0), 0);
+          setCategories([{ name: 'All', toolCount: total }, ...res.data.data]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const q = searchParams.get('q');
@@ -49,24 +65,29 @@ export default function Tools() {
   const fetchTools = async (searchQuery) => {
     setLoading(true);
     try {
-      let url;
-      if (searchQuery) {
-        url = `/tools/search?q=${encodeURIComponent(searchQuery)}&limit=12`;
-      } else {
-        const params = new URLSearchParams({ page, limit: 12, sort });
-        if (category && category !== 'All') params.append('category', category);
-        if (pricing && pricing !== 'All') params.append('pricing', pricing);
-        url = `/tools?${params}`;
-      }
+      const params = new URLSearchParams({ page, limit: 12, sort });
+      if (category && category !== 'All') params.append('category', category);
+      if (pricing && pricing !== 'All') params.append('pricing', pricing);
+      if (searchQuery) params.append('search', searchQuery);
+      const url = `/tools?${params}`;
+      
       const res = await API.get(url);
       setTools(res.data.data);
-      if (res.data.pagination) setTotalPages(res.data.pagination.pages);
+      if (res.data.pagination) {
+        setTotalPages(res.data.pagination.pages);
+        setTotalTools(res.data.pagination.total);
+      }
     } catch (err) { console.error(err); }
     setLoading(false);
   };
 
   const handleSearch = (q) => {
-    setSearchParams({ q });
+    if (q) {
+      setSearchParams({ q });
+    } else {
+      searchParams.delete('q');
+      setSearchParams(searchParams);
+    }
     setPage(1);
   };
 
@@ -75,7 +96,7 @@ export default function Tools() {
   }`;
 
   return (
-    <div className="min-h-screen pt-28 pb-20">
+    <div className="min-h-screen pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
@@ -95,9 +116,17 @@ export default function Tools() {
               </div>
               <div className={`${showFilters ? 'block' : 'hidden lg:block'} space-y-1`}>
                 {categories.map(c => (
-                  <button key={c} onClick={() => { setCategory(c === 'All' ? '' : c); setPage(1); }}
-                    className={filterItemClass((c === 'All' && !category) || c === category)}>
-                    {c}
+                  <button key={c.name} onClick={() => { 
+                    setCategory(c.name === 'All' ? '' : c.name); 
+                    setPage(1);
+                  }}
+                    className={filterItemClass((c.name === 'All' && !category) || c.name === category)}>
+                    <span className="flex justify-between items-center w-full">
+                      <span>{c.name}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${((c.name === 'All' && !category) || c.name === category) ? 'bg-white/20' : 'bg-white/5'}`}>
+                        {c.toolCount || 0}
+                      </span>
+                    </span>
                   </button>
                 ))}
               </div>
@@ -130,9 +159,19 @@ export default function Tools() {
           {/* Grid */}
           <div className="flex-1">
             <div className="mb-8 flex justify-between items-center">
-               <SearchBar onSearch={handleSearch} />
+               <SearchBar 
+                 key={searchParams.get('q') || 'default'} 
+                 initialValue={searchParams.get('q') || ''}
+                 onSearch={handleSearch} 
+               />
                <div className="hidden sm:block text-xs font-bold text-gray-600">
-                  Showing <span className="text-gray-400">{tools.length}</span> tools
+                  {searchParams.get('q') ? (
+                    <>Showing <span className="text-gray-400">{totalTools}</span> results for "{searchParams.get('q')}"</>
+                  ) : category ? (
+                    <>Showing <span className="text-gray-400">{totalTools}</span> tools in {category}</>
+                  ) : (
+                    <>Showing <span className="text-gray-400">{totalTools}</span> tools</>
+                  )}
                </div>
             </div>
 

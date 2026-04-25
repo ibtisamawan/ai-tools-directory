@@ -1,9 +1,43 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { FaTwitter, FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import { FaTwitter, FaGithub, FaLinkedinIn, FaChevronRight } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import API from '../api';
 
 export default function Footer() {
   const { darkMode } = useTheme();
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [categories, setCategories] = useState(['Chatbots', 'Image Generation', 'Writing', 'Video', 'Coding']);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          setCategories(res.data.data.slice(0, 5).map(c => c.name));
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories for footer:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    setNewsletterLoading(true);
+    try {
+      await API.post('/newsletter', { email: newsletterEmail });
+      toast.success('Successfully subscribed!');
+      setNewsletterEmail('');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to subscribe');
+    }
+    setNewsletterLoading(false);
+  };
 
   const socialLinks = [
     { icon: <FaTwitter />, href: '#' },
@@ -38,11 +72,15 @@ export default function Footer() {
 
           {/* Col 2: Quick Links */}
           <div>
-            <h3 className="text-white font-bold mb-6">Quick Links</h3>
+            <h3 className="text-white font-semibold text-lg mb-8 relative inline-block">
+              Quick Links
+              <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full"></span>
+            </h3>
             <ul className="space-y-4">
               {[['/', 'Home'], ['/tools', 'Browse Tools'], ['/submit', 'Submit Tool'], ['/admin', 'Admin Panel']].map(([to, label]) => (
                 <li key={to}>
-                  <Link to={to} className="text-gray-500 text-sm hover:text-primary-light transition-colors">
+                  <Link to={to} className="group flex items-center gap-2 text-gray-400 text-sm hover:text-white transition-all duration-300">
+                    <FaChevronRight className="text-[10px] text-primary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                     {label}
                   </Link>
                 </li>
@@ -52,11 +90,15 @@ export default function Footer() {
 
           {/* Col 3: Categories */}
           <div>
-            <h3 className="text-white font-bold mb-6">Top Categories</h3>
+            <h3 className="text-white font-semibold text-lg mb-8 relative inline-block">
+              Top Categories
+              <span className="absolute -bottom-2 left-0 w-8 h-1 bg-secondary rounded-full"></span>
+            </h3>
             <ul className="space-y-4">
-              {['Chatbots', 'Image Generation', 'Writing', 'Video', 'Coding'].map(cat => (
+              {categories.map(cat => (
                 <li key={cat}>
-                  <Link to={`/category/${cat.toLowerCase().replace(/ /g, '-')}`} className="text-gray-500 text-sm hover:text-primary-light transition-colors">
+                  <Link to={`/category/${cat.toLowerCase().replace(/ /g, '-')}`} className="group flex items-center gap-2 text-gray-400 text-sm hover:text-white transition-all duration-300">
+                    <FaChevronRight className="text-[10px] text-secondary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                     {cat}
                   </Link>
                 </li>
@@ -68,26 +110,30 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold mb-6">Weekly Updates</h3>
             <p className="text-gray-500 text-sm mb-4">Get AI news & tools in your inbox.</p>
-            <div className="flex bg-[#111827] rounded-lg overflow-hidden border border-gray-800 focus-within:border-primary transition-colors">
+            <form onSubmit={handleNewsletterSubmit} className="flex bg-[#111827] rounded-lg overflow-hidden border border-gray-800 focus-within:border-primary transition-colors">
               <input 
                 type="email" 
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder="Email..."
+                required
                 className="bg-transparent px-4 py-2 text-xs text-white outline-none w-full"
               />
-              <button className="bg-primary px-4 py-2 text-white text-xs font-bold hover:bg-primary-dark transition-colors">
-                Join
+              <button 
+                type="submit"
+                disabled={newsletterLoading}
+                className="bg-primary px-4 py-2 text-white text-xs font-bold hover:bg-primary-dark transition-colors disabled:opacity-50"
+              >
+                {newsletterLoading ? '...' : 'Join'}
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-[#1F2937] flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-600 text-xs">
+          <p className="text-gray-600 text-xs text-center w-full">
             &copy; {new Date().getFullYear()} AI ToolsDir. All rights reserved.
-          </p>
-          <p className="text-gray-600 text-xs">
-            Made with <span className="text-red-500">❤️</span> for AI enthusiasts
           </p>
         </div>
       </div>

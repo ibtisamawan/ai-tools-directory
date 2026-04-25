@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Tools from './pages/Tools';
 import ToolDetail from './pages/ToolDetail';
@@ -18,9 +19,10 @@ export default function App() {
     <HelmetProvider>
       <ThemeProvider>
         <Router>
+          <ScrollToTop />
           <div className="min-h-screen flex flex-col">
             <Navbar />
-            <main className="flex-1">
+            <main className="flex-1 pt-28">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tools" element={<Tools />} />

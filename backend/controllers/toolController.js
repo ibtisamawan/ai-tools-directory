@@ -4,16 +4,31 @@ const Review = require('../models/Review');
 // Get all tools with pagination, filter, sort
 exports.getTools = async (req, res) => {
   try {
-    const { page = 1, limit = 12, category, pricing, sort, featured, approved = 'true', minRating } = req.query;
+    const { page = 1, limit = 12, category, pricing, sort, search, approved = 'true' } = req.query;
     const query = {};
 
     if (approved === 'true') query.approved = true;
     if (approved === 'false') query.approved = false;
-    if (approved === 'all') { /* no filter */ }
-    if (category && category !== 'All') query.category = category;
-    if (pricing) query.pricing = pricing;
-    if (featured === 'true') query.featured = true;
-    if (minRating) query.rating = { $gte: Number(minRating) };
+    
+    const escapeRegex = (string) => string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+    if (category && category !== 'All') {
+      query.category = { $regex: new RegExp(escapeRegex(category), 'i') };
+    }
+    
+    if (pricing && pricing !== 'All') query.pricing = pricing;
+
+    if (search) {
+      const searchRegex = new RegExp(escapeRegex(search), 'i');
+      query.$or = [
+        { name: searchRegex },
+        { shortDescription: searchRegex },
+        { fullDescription: searchRegex },
+        { category: searchRegex },
+        { tags: { $in: [searchRegex] } },
+        { pricing: searchRegex }
+      ];
+    }
 
     let sortOption = { createdAt: -1 };
     switch (sort) {
@@ -47,13 +62,17 @@ exports.getTools = async (req, res) => {
 // Get single tool by ID or slug
 exports.getToolById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const identifier = req.params.id;
     let tool;
 
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      tool = await Tool.findById(id);
-    } else {
-      tool = await Tool.findOne({ slug: id });
+    // Try finding by ID first
+    if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
+      tool = await Tool.findById(identifier).catch(() => null);
+    }
+    
+    // If not found by ID, try finding by slug
+    if (!tool) {
+      tool = await Tool.findOne({ slug: identifier });
     }
 
     if (!tool) {
@@ -86,13 +105,17 @@ exports.searchTools = async (req, res) => {
     const { q, limit = 12 } = req.query;
     if (!q) return res.json({ success: true, data: [] });
 
+    const escapeRegex = (string) => string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const searchRegex = new RegExp(escapeRegex(q), 'i');
     const tools = await Tool.find({
       approved: true,
       $or: [
-        { name: { $regex: q, $options: 'i' } },
-        { shortDescription: { $regex: q, $options: 'i' } },
-        { tags: { $in: [new RegExp(q, 'i')] } },
-        { category: { $regex: q, $options: 'i' } }
+        { name: searchRegex },
+        { shortDescription: searchRegex },
+        { fullDescription: searchRegex },
+        { category: searchRegex },
+        { tags: { $in: [searchRegex] } },
+        { pricing: searchRegex }
       ]
     }).limit(Number(limit));
 
@@ -108,11 +131,11 @@ exports.getToolsByCategory = async (req, res) => {
     const { name } = req.params;
     const { page = 1, limit = 12, sort } = req.query;
 
-    const categoryName = name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    const query = { approved: true };
-
-    // Try exact match first, then case-insensitive
-    query.category = { $regex: new RegExp(`^${categoryName}$`, 'i') };
+    const escapeRegex = (string) => string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const query = { 
+      category: { $regex: new RegExp(escapeRegex(name), 'i') },
+      approved: true 
+    };
 
     let sortOption = { createdAt: -1 };
     switch (sort) {
@@ -131,7 +154,6 @@ exports.getToolsByCategory = async (req, res) => {
     res.json({
       success: true,
       data: tools,
-      category: categoryName,
       pagination: { total, page: Number(page), pages: Math.ceil(total / Number(limit)), limit: Number(limit) }
     });
   } catch (err) {

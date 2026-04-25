@@ -98,7 +98,7 @@ export default function Admin() {
           <div className="text-center">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">A</div>
             <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Admin Login</h1>
-            <p className={`text-xs mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>admin / admin123</p>
+            <p className={`text-xs mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>Restricted Access</p>
           </div>
           <input type="text" placeholder="Username" value={creds.username} onChange={e => setCreds({...creds, username: e.target.value})} className={inputClass} required />
           <input type="password" placeholder="Password" value={creds.password} onChange={e => setCreds({...creds, password: e.target.value})} className={inputClass} required />

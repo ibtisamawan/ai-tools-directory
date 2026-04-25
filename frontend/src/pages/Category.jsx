@@ -5,32 +5,36 @@ import ToolCard from '../components/ToolCard';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 import API from '../api';
 
-const categoryMeta = {
-  chatbots: { icon: '💬', desc: 'AI-powered conversational agents and chatbots' },
-  writing: { icon: '✍️', desc: 'AI tools for content writing and copywriting' },
-  'image-generation': { icon: '🎨', desc: 'Create stunning images with AI' },
-  video: { icon: '🎬', desc: 'AI-powered video creation and editing tools' },
-  coding: { icon: '💻', desc: 'AI assistants for software development' },
-  audio: { icon: '🎵', desc: 'AI tools for audio, music, and voice' },
-  productivity: { icon: '⚡', desc: 'Boost your productivity with AI' },
-  marketing: { icon: '📈', desc: 'AI-powered marketing and SEO tools' },
-  education: { icon: '📚', desc: 'AI tools for learning and education' },
-  design: { icon: '🎯', desc: 'AI-powered design and creative tools' },
-};
-
 export default function Category() {
   const { name } = useParams();
   const { darkMode } = useTheme();
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState('newest');
+  const [meta, setMeta] = useState({ icon: '🔧', desc: 'Browse tools in this category' });
   const revealRefs = useRef([]);
   revealRefs.current = [];
 
-  const meta = categoryMeta[name] || { icon: '🔧', desc: 'Browse tools in this category' };
   const displayName = name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   useEffect(() => {
+    const fetchCategoryMeta = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          const found = res.data.data.find(c => 
+            c.name.toLowerCase().replace(/ /g, '-') === name.toLowerCase() ||
+            c.name.toLowerCase() === name.toLowerCase()
+          );
+          if (found) {
+            setMeta({ icon: found.icon, desc: found.description });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch category meta:', err);
+      }
+    };
+    fetchCategoryMeta();
     fetchTools();
   }, [name, sort]);
 
@@ -55,7 +59,7 @@ export default function Category() {
   };
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen">
       {/* Banner */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#1a0533] to-dark-bg border-b border-primary/10">
         <div className="blur-circle w-[400px] h-[400px] bg-primary/10 top-0 left-0"></div>

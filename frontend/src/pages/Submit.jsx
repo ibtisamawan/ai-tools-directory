@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import API from '../api';
 import toast from 'react-hot-toast';
 import { HiCheckCircle } from 'react-icons/hi';
 
-const categories = ['Chatbots', 'Writing', 'Image Generation', 'Video', 'Coding', 'Audio', 'Productivity', 'Marketing', 'Education', 'Design'];
 
 export default function Submit() {
   const { darkMode } = useTheme();
@@ -13,6 +12,21 @@ export default function Submit() {
     name: '', website: '', shortDescription: '', fullDescription: '',
     category: '', pricing: 'Free', logo: '', screenshots: '', tags: ''
   });
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          setCategories(res.data.data.map(c => c.name));
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 

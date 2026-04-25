@@ -1,21 +1,24 @@
+import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
-
-const categories = [
-  { name: 'All', icon: '🔥' },
-  { name: 'Writing', icon: '✍️' },
-  { name: 'Image Generation', icon: '🎨' },
-  { name: 'Video', icon: '🎬' },
-  { name: 'Coding', icon: '💻' },
-  { name: 'Chatbots', icon: '💬' },
-  { name: 'Audio', icon: '🎵' },
-  { name: 'Productivity', icon: '⚡' },
-  { name: 'Marketing', icon: '📈' },
-  { name: 'Education', icon: '📚' },
-  { name: 'Design', icon: '🎯' },
-];
+import API from '../api';
 
 export default function CategoryFilter({ selected = 'All', onSelect }) {
   const { darkMode } = useTheme();
+  const [categories, setCategories] = useState([{ name: 'All', icon: '🔥' }]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          setCategories([{ name: 'All', icon: '🔥' }, ...res.data.data]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <div className="w-full">
