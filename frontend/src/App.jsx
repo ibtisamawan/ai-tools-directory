@@ -12,7 +12,7 @@ import Category from './pages/Category';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Admin from './pages/Admin';
-import SubmitTool from './pages/SubmitTool';
+import SubmitTool from './pages/Submit';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
