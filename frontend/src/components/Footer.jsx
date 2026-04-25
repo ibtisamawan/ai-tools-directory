@@ -29,12 +29,12 @@ const Footer = () => {
             <ul className="space-y-4 text-sm text-gray-400">
               <li><Link to="/" className="hover:text-purple-400 transition-colors">Home</Link></li>
               <li><Link to="/tools" className="hover:text-purple-400 transition-colors">All Tools</Link></li>
-              <li><Link to="/categories" className="hover:text-purple-400 transition-colors">Categories</Link></li>
+              <li><Link to="/tools" className="hover:text-purple-400 transition-colors">Categories</Link></li>
               <li><Link to="/submit" className="hover:text-purple-400 transition-colors">Submit Tool</Link></li>
               <li><Link to="/admin" className="hover:text-purple-400 transition-colors">Admin Panel</Link></li>
             </ul>
           </div>
-
+ 
           {/* Col 3 - Company */}
           <div className="space-y-6">
             <h4 className="text-white font-bold uppercase tracking-wider text-xs">Company</h4>
@@ -43,7 +43,7 @@ const Footer = () => {
               <li><Link to="/blog" className="hover:text-purple-400 transition-colors">Blog</Link></li>
               <li><Link to="/contact" className="hover:text-purple-400 transition-colors">Contact Us</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-purple-400 transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
 

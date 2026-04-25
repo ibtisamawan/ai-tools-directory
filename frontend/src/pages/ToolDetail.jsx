@@ -16,6 +16,7 @@ export default function ToolDetail() {
   const [loading, setLoading] = useState(true);
   const [reviewForm, setReviewForm] = useState({ userName: '', rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     fetchTool();
@@ -27,6 +28,7 @@ export default function ToolDetail() {
     try {
       const res = await API.get(`/tools/${slug}`);
       setTool(res.data.data);
+      setLogoError(false);
       setReviews(res.data.data.reviews || []);
       setSimilar(res.data.data.similarTools || []);
     } catch (err) {
@@ -75,8 +77,11 @@ export default function ToolDetail() {
       <div className={`${cardClass} mb-6`}>
         <div className="flex flex-col sm:flex-row items-start gap-5">
           <div className={`w-20 h-20 rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0 ${darkMode ? 'bg-white/10' : 'bg-gray-100'}`}>
-            {tool.logo ? <img src={tool.logo} alt={tool.name} className="w-12 h-12 object-contain" onError={e => e.target.style.display='none'} /> : null}
-            <span className={`text-3xl font-bold ${tool.logo ? 'hidden' : ''} text-primary`}>{tool.name?.charAt(0)}</span>
+            {tool.logo && !logoError ? (
+              <img src={tool.logo} alt={tool.name} className="w-12 h-12 object-contain" onError={() => setLogoError(true)} />
+            ) : (
+              <span className="text-3xl font-bold text-primary">{tool.name?.charAt(0)}</span>
+            )}
           </div>
           <div className="flex-1">
             <div className="flex items-start justify-between gap-4 flex-wrap">

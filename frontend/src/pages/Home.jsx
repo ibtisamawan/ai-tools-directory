@@ -83,11 +83,9 @@ export default function Home() {
 
   const handleCategorySelect = (cat) => {
     setSelectedCategory(cat);
-    if (cat === 'All') {
-      navigate('/tools');
-    } else {
-      const slug = cat.toLowerCase().replace(/ /g, '-');
-      navigate(`/category/${encodeURIComponent(slug)}`);
+    // Scroll to results on mobile for better UX
+    if (window.innerWidth < 768 && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 

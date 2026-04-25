@@ -115,11 +115,13 @@ const Navbar = () => {
       )}
 
       <div
-        className={`mobile-sidebar fixed top-0 left-0 w-[280px] h-full bg-[#0A0F1E] border-r border-gray-800 z-[999] transform transition-transform duration-300 ease-in-out p-6 pt-20 overflow-y-auto ${
+        className={`mobile-sidebar fixed top-0 left-0 w-[280px] h-full bg-[#0A0F1E] border-r border-gray-800 z-[999] transform transition-transform duration-300 ease-in-out p-6 pt-24 overflow-y-auto ${
           menuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="text-xl font-extrabold text-purple-500 mb-8">AI ToolsDir</div>
+        <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400 mb-10">
+          AI ToolsDir
+        </div>
         
         <div className="flex flex-col space-y-2">
           {navLinks.map((link) => (

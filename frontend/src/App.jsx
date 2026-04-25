@@ -40,7 +40,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tools" element={<Tools />} />
-                <Route path="/categories" element={<Category />} />
+                <Route path="/category/:name" element={<Category />} />
                 <Route path="/tools/:slug" element={<ToolDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
