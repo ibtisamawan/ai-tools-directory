@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "npm start --prefix backend",
-    "build": "npm run build --prefix frontend"
+    "build": "echo 'Platform-specific builds will handle this'"
   },
   "engines": {
     "node": "20.x"
