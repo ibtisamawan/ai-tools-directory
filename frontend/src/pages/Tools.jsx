@@ -1,0 +1,185 @@
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
+import ToolCard from '../components/ToolCard';
+import SearchBar from '../components/SearchBar';
+import { CardSkeleton } from '../components/LoadingSkeleton';
+import API from '../api';
+import { HiAdjustments } from 'react-icons/hi';
+
+export default function Tools() {
+  const { darkMode } = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tools, setTools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [category, setCategory] = useState('');
+  const [pricing, setPricing] = useState('');
+  const [sort, setSort] = useState('newest');
+  const [showFilters, setShowFilters] = useState(false);
+  const revealRefs = useRef([]);
+  revealRefs.current = [];
+
+  const categories = ['All', 'Chatbots', 'Writing', 'Image Generation', 'Video', 'Coding', 'Audio', 'Productivity', 'Marketing', 'Education', 'Design'];
+  const pricingOpts = ['All', 'Free', 'Paid', 'Freemium'];
+  const sortOpts = [
+    { value: 'newest', label: 'Newest' },
+    { value: 'popular', label: 'Most Popular' },
+    { value: 'top-rated', label: 'Top Rated' },
+    { value: 'alphabetical', label: 'A-Z' },
+  ];
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    fetchTools(q);
+  }, [page, category, pricing, sort, searchParams]);
+
+  // Scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+      });
+    }, { threshold: 0.1 });
+    revealRefs.current.forEach(el => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [tools, loading]);
+
+  const fetchTools = async (searchQuery) => {
+    setLoading(true);
+    try {
+      let url;
+      if (searchQuery) {
+        url = `/tools/search?q=${encodeURIComponent(searchQuery)}&limit=12`;
+      } else {
+        const params = new URLSearchParams({ page, limit: 12, sort });
+        if (category && category !== 'All') params.append('category', category);
+        if (pricing && pricing !== 'All') params.append('pricing', pricing);
+        url = `/tools?${params}`;
+      }
+      const res = await API.get(url);
+      setTools(res.data.data);
+      if (res.data.pagination) setTotalPages(res.data.pagination.pages);
+    } catch (err) { console.error(err); }
+    setLoading(false);
+  };
+
+  const handleSearch = (q) => {
+    setSearchParams({ q });
+    setPage(1);
+  };
+
+  const filterItemClass = (active) => `block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+    active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-400 hover:text-white hover:bg-white/5'
+  }`;
+
+  return (
+    <div className="min-h-screen pt-28 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-4xl font-black text-white mb-4">All AI Tools</h1>
+          <p className="text-gray-500 font-medium max-w-xl">Browse our complete collection of artificial intelligence tools across all categories and pricing models.</p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Sidebar */}
+          <aside className="w-full lg:w-64 flex-shrink-0 space-y-10">
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                 <h3 className="text-xs font-black text-gray-500 uppercase tracking-[0.2em]">Category</h3>
+                 <button className="lg:hidden text-primary-light" onClick={() => setShowFilters(!showFilters)}>
+                    <HiAdjustments size={20} />
+                 </button>
+              </div>
+              <div className={`${showFilters ? 'block' : 'hidden lg:block'} space-y-1`}>
+                {categories.map(c => (
+                  <button key={c} onClick={() => { setCategory(c === 'All' ? '' : c); setPage(1); }}
+                    className={filterItemClass((c === 'All' && !category) || c === category)}>
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <h3 className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Pricing</h3>
+              <div className="space-y-1">
+                {pricingOpts.map(p => (
+                  <button key={p} onClick={() => { setPricing(p === 'All' ? '' : p); setPage(1); }}
+                    className={filterItemClass((p === 'All' && !pricing) || p === pricing)}>
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <h3 className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Sort By</h3>
+              <select 
+                value={sort} 
+                onChange={(e) => { setSort(e.target.value); setPage(1); }} 
+                className="w-full px-4 py-3 bg-[#111827] border border-[#1F2937] rounded-xl text-white text-sm font-bold outline-none focus:border-primary transition-all appearance-none"
+              >
+                {sortOpts.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+              </select>
+            </div>
+          </aside>
+
+          {/* Grid */}
+          <div className="flex-1">
+            <div className="mb-8 flex justify-between items-center">
+               <SearchBar onSearch={handleSearch} />
+               <div className="hidden sm:block text-xs font-bold text-gray-600">
+                  Showing <span className="text-gray-400">{tools.length}</span> tools
+               </div>
+            </div>
+
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => <CardSkeleton key={i} />)}
+              </div>
+            ) : tools.length === 0 ? (
+              <div className="text-center py-32 premium-card">
+                <p className="text-4xl mb-6">🔍</p>
+                <h3 className="text-xl font-bold text-white mb-2">No tools found</h3>
+                <p className="text-gray-500">Try adjusting your filters or search query.</p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {tools.map(tool => (
+                    <div key={tool._id} className="reveal" ref={el => revealRefs.current.push(el)}>
+                      <ToolCard tool={tool} />
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-16">
+                    <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                      className="px-6 py-2.5 rounded-xl border border-[#1F2937] text-gray-400 font-bold hover:border-primary transition-all disabled:opacity-30">
+                      Prev
+                    </button>
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button key={i} onClick={() => setPage(i + 1)}
+                        className={`w-12 h-12 rounded-xl font-black transition-all ${page === i + 1 ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white hover:bg-white/5'}`}>
+                        {i + 1}
+                      </button>
+                    ))}
+                    <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+                      className="px-6 py-2.5 rounded-xl border border-[#1F2937] text-gray-400 font-bold hover:border-primary transition-all disabled:opacity-30">
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
