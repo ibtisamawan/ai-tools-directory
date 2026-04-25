@@ -1,144 +1,174 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
-import { HiMenu, HiX, HiMoon, HiSun, HiUserCircle } from 'react-icons/hi';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-export default function Navbar() {
-  const { darkMode, toggleTheme } = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const location = useLocation();
-
-  const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('user')) || null; } catch { return null; }
-  });
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [location]);
+
+  // Close menu when link clicked
+  const handleNavClick = () => {
+    setMenuOpen(false);
+  };
+
+  // Close menu when outside clicked
+  const handleOverlayClick = () => {
+    setMenuOpen(false);
+  };
+
+  // Close on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (menuOpen) setMenuOpen(false);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const links = [
-    { to: '/', label: 'Home' },
-    { to: '/tools', label: 'Tools' },
-    { to: '/category/chatbots', label: 'Chatbots' },
-    { to: '/submit', label: 'Submit Tool' },
-  ];
-
-  const isActive = (path) => location.pathname === path;
-
-  const userInitials = user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : (user?.username ? user.username.slice(0,2).toUpperCase() : '?');
+  }, [menuOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('adminToken');
     setUser(null);
-    setShowUserDropdown(false);
+    navigate('/');
+    handleNavClick();
   };
 
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Tools', path: '/tools' },
+    { name: 'Chatbots', path: '/tools?category=Chatbots' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
+    { name: 'Submit Tool', path: '/submit' },
+  ];
+
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-3' : 'bg-transparent py-5'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-black tracking-tighter premium-gradient-text">
-              AI ToolsDir
-            </span>
-          </Link>
+    <nav className="sticky top-0 z-[1000] bg-[#0A0F1E]/80 backdrop-blur-md border-b border-gray-800">
+      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
+          AI ToolsDir
+        </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8">
-            {links.map(link => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`text-sm font-semibold transition-all duration-200 ${
-                  isActive(link.to)
-                    ? 'text-primary-light'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Right side Actions */}
-          <div className="hidden lg:flex items-center gap-6">
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-gray-400 hover:text-yellow-400 transition-colors"
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center space-x-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`text-sm font-medium transition-colors hover:text-purple-400 ${
+                location.pathname === link.path ? 'text-purple-400' : 'text-gray-300'
+              }`}
             >
-              {darkMode ? <HiSun size={22} /> : <HiMoon size={22} />}
-            </button>
+              {link.name}
+            </Link>
+          ))}
+          {user ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-300 text-sm">{user.username}</span>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm hover:bg-gray-700 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Link to="/login" className="text-sm font-medium text-gray-300 hover:text-purple-400">
+                Login
+              </Link>
+              <Link to="/register" className="px-5 py-2 rounded-lg bg-purple-600 text-white text-sm font-bold hover:bg-purple-500 transition-all shadow-lg shadow-purple-500/20">
+                Register
+              </Link>
+            </div>
+          )}
+        </div>
 
-            {!user ? (
-              <div className="flex items-center gap-3">
-                <Link 
-                  to="/login" 
-                  className="px-5 py-2 text-sm font-bold text-primary-light border border-primary-light/40 rounded-xl hover:bg-primary/10 transition-all"
+        {/* Hamburger */}
+        <button
+          className="md:hidden flex flex-col space-y-1.5 p-2 focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span className={`block w-6 h-0.5 bg-purple-400 transition-transform ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+          <span className={`block w-6 h-0.5 bg-purple-400 transition-opacity ${menuOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`block w-6 h-0.5 bg-purple-400 transition-transform ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+        </button>
+      </div>
+
+      {/* Mobile Sidebar System */}
+      {menuOpen && (
+        <div
+          className="mobile-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[998]"
+          onClick={handleOverlayClick}
+        />
+      )}
+
+      <div
+        className={`mobile-sidebar fixed top-0 left-0 w-[280px] h-full bg-[#0A0F1E] border-r border-gray-800 z-[999] transform transition-transform duration-300 ease-in-out p-6 pt-20 overflow-y-auto ${
+          menuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="text-xl font-extrabold text-purple-500 mb-8">AI ToolsDir</div>
+        
+        <div className="flex flex-col space-y-2">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={handleNavClick}
+              className="block py-3 text-gray-300 hover:text-purple-400 border-b border-gray-800/50 transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
+          
+          <div className="pt-6 space-y-3">
+            {user ? (
+              <>
+                <div className="px-4 py-3 bg-gray-800/50 rounded-lg text-gray-300 text-sm">
+                  Logged in as <span className="text-purple-400 font-bold">{user.username}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full py-3 border border-purple-500 text-purple-500 rounded-xl font-bold"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={handleNavClick}
+                  className="block w-full py-3 border border-purple-500 text-purple-500 rounded-xl text-center font-bold"
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
-                  className="px-5 py-2 text-sm font-bold text-white bg-primary rounded-xl hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all"
+                <Link
+                  to="/register"
+                  onClick={handleNavClick}
+                  className="block w-full py-3 bg-purple-600 text-white rounded-xl text-center font-bold"
                 >
                   Register
                 </Link>
-              </div>
-            ) : (
-              <div className="relative">
-                <button 
-                  onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm border-2 border-white/10"
-                >
-                  {userInitials}
-                </button>
-                {showUserDropdown && (
-                  <div className="absolute right-0 mt-3 w-48 premium-card p-2 shadow-2xl">
-                    <Link to="/admin" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">My Dashboard</Link>
-                    <Link to="/tools" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Saved Tools</Link>
-                    <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg">Logout</button>
-                  </div>
-                )}
-              </div>
+              </>
             )}
-          </div>
-
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-gray-300"
-          >
-            {mobileOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      <div className={`fixed inset-0 z-40 bg-dark-bg/95 backdrop-blur-xl lg:hidden transition-transform duration-500 ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex flex-col h-full p-8 pt-24">
-          {links.map(link => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={() => setMobileOpen(false)}
-              className="text-3xl font-bold text-white mb-8"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="mt-auto space-y-4">
-            <Link to="/login" className="block w-full py-4 text-center font-bold text-primary-light border border-primary-light/40 rounded-2xl">Login</Link>
-            <Link to="/register" className="block w-full py-4 text-center font-bold text-white bg-primary rounded-2xl">Register</Link>
           </div>
         </div>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;
