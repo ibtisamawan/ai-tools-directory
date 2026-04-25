@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://ibtisam097:Mibtisam097@ac-daqqfwy-shard-00-00.s2vetmr.mongodb.net:27017,ac-daqqfwy-shard-00-01.s2vetmr.mongodb.net:27017,ac-daqqfwy-shard-00-02.s2vetmr.mongodb.net:27017/ai-tools-directory?ssl=true&replicaSet=atlas-daqqfwy-shard-0&authSource=admin&retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://ibtisam097:Mibtisam097@ac-daqqfwy-shard-00-00.s2vetmr.mongodb.net:27017,ac-daqqfwy-shard-00-01.s2vetmr.mongodb.net:27017,ac-daqqfwy-shard-00-02.s2vetmr.mongodb.net:27017/ai-tools-directory?ssl=true&replicaSet=atlas-t6ylnm-shard-0&authSource=admin&retryWrites=true&w=majority';
 
 // Tool Schema
 const toolSchema = new mongoose.Schema({
