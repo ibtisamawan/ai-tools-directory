@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import FAQ from '../components/FAQ';
 
 const About = () => {
   const stats = [
@@ -20,6 +22,10 @@ const About = () => {
 
   return (
     <div className="bg-[#0A0F1E] text-white">
+      <Helmet>
+        <title>About AI Tools Directory - Your Trusted AI Tools Guide</title>
+        <meta name="description" content="Learn about AI Tools Directory - the free platform helping users discover the best AI tools. Our mission, story, and team." />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden" style={{ background: 'radial-gradient(ellipse at top, #1a0533, #0A0F1E)' }}>
         <div className="container mx-auto text-center relative z-10">
@@ -103,6 +109,11 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      <FAQ title="About Page FAQ" faqs={[
+        { q: "Who runs AI Tools Directory?", a: "AI Tools Directory is run by a team of AI enthusiasts based in Pakistan dedicated to helping people discover the best AI tools." },
+        { q: "How do you make money?", a: "We earn through Google AdSense advertising and featured tool listings. Using our website is completely free for visitors." }
+      ]} />
     </div>
   );
 };

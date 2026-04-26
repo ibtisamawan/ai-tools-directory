@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const PrivacyPolicy = () => {
   const sections = [
@@ -70,6 +71,10 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="bg-[#0A0F1E] text-white py-12 px-4 md:py-20">
+      <Helmet>
+        <title>Privacy Policy - AI Tools Directory | Data Protection</title>
+        <meta name="description" content="Read our privacy policy to understand how AI Tools Directory collects, uses, and protects your information. Information about cookies and Google AdSense." />
+      </Helmet>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">Privacy Policy</h1>

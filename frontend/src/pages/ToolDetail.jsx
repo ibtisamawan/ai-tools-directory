@@ -6,6 +6,7 @@ import { DetailSkeleton } from '../components/LoadingSkeleton';
 import API from '../api';
 import toast from 'react-hot-toast';
 import { HiStar, HiExternalLink, HiShare, HiClipboardCopy } from 'react-icons/hi';
+import { Helmet } from 'react-helmet-async';
 
 export default function ToolDetail() {
   const { slug } = useParams();
@@ -64,6 +65,11 @@ export default function ToolDetail() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Helmet>
+        <title>{tool.name} - AI Tool Features, Reviews & Pricing | AI Tools Directory</title>
+        <meta name="description" content={`Discover ${tool.name}. ${tool.shortDescription} Learn about features, pricing, and user reviews for this AI tool in the ${tool.category} category.`} />
+        <meta name="keywords" content={`${tool.name}, ${tool.category} AI tool, best AI tools, ${tool.tags?.join(', ')}`} />
+      </Helmet>
       {/* Breadcrumb */}
       <nav className={`flex items-center gap-2 text-sm mb-6 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
         <Link to="/" className="hover:text-primary transition-colors">Home</Link>
@@ -99,7 +105,12 @@ export default function ToolDetail() {
               <div className="flex items-center gap-2">
                 <button onClick={shareTool} className={`p-2.5 rounded-xl border transition-all ${darkMode ? 'border-dark-border text-gray-400 hover:text-white hover:border-primary' : 'border-gray-200 text-gray-400 hover:text-gray-700 hover:border-primary'}`}><HiShare className="w-5 h-5" /></button>
                 <button onClick={() => { navigator.clipboard.writeText(tool.website); toast.success('URL copied!'); }} className={`p-2.5 rounded-xl border transition-all ${darkMode ? 'border-dark-border text-gray-400 hover:text-white hover:border-primary' : 'border-gray-200 text-gray-400 hover:text-gray-700 hover:border-primary'}`}><HiClipboardCopy className="w-5 h-5" /></button>
-                <a href={tool.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-primary/25 transition-all">
+                <a 
+                  href={tool.website.startsWith('http') ? tool.website : `https://${tool.website}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-primary/25 transition-all"
+                >
                   Visit Tool <HiExternalLink className="w-4 h-4" />
                 </a>
               </div>

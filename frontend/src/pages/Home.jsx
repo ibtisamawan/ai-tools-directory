@@ -8,6 +8,8 @@ import Newsletter from '../components/Newsletter';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 import API from '../api';
 import { HiSparkles, HiTrendingUp, HiClock, HiStar } from 'react-icons/hi';
+import { Helmet } from 'react-helmet-async';
+import FAQ from '../components/FAQ';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -91,6 +93,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>AI Tools Directory - Find the Best AI Tools 2026 | 126+ Tools</title>
+        <meta name="description" content="Discover 126+ best AI tools across 25 categories. Find AI tools for writing, coding, image generation, marketing and more. Free to use." />
+        <meta name="keywords" content="AI tools, artificial intelligence tools, best AI tools 2026, AI software directory" />
+      </Helmet>
+
       {/* Hero Section */}
       <section className="relative hero-radial-bg overflow-hidden min-h-[85vh] flex items-center">
         {/* Background Depth Circles */}
@@ -214,6 +222,15 @@ export default function Home() {
       </section>
 
       <Newsletter />
+
+      <FAQ faqs={[
+        { q: "What is AI Tools Directory?", a: "AI Tools Directory is a free platform where you can discover compare and find the best artificial intelligence tools for any task. We list 126+ AI tools across 25 categories." },
+        { q: "Is AI Tools Directory free to use?", a: "Yes! Our website is completely free. You can browse all tools compare features and visit any tool without paying anything." },
+        { q: "How often are new tools added?", a: "We add new AI tools every week. The AI industry moves fast and we make sure our directory stays up to date." },
+        { q: "How can I submit my AI tool?", a: "Click Submit Tool in the navigation menu and fill out the form. Our team reviews submissions within 48 hours." },
+        { q: "How are tools rated?", a: "Tools are rated based on user reviews features pricing and overall usefulness. Ratings are updated regularly." },
+        { q: "Can I advertise on AI Tools Directory?", a: "Yes we offer advertising opportunities. Contact us at mibtisam097@gmail.com" }
+      ]} />
     </div>
   );
 }

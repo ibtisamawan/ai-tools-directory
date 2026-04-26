@@ -24,10 +24,9 @@ export default function SearchBar({ large = false, onSearch, initialValue = '' }
   return (
     <form 
       onSubmit={handleSubmit} 
-      className={`relative w-full ${large ? 'max-w-[700px]' : 'max-w-md'} transition-all duration-300`}
+      className="w-full flex justify-center"
     >
-      <div className="search-input-container group flex items-center p-1 sm:p-1.5">
-        <HiSearch className="ml-4 text-gray-500 group-focus-within:text-primary-light transition-colors" size={20} />
+      <div className="search-container">
         <input
           type="text"
           value={query}
@@ -37,12 +36,12 @@ export default function SearchBar({ large = false, onSearch, initialValue = '' }
               onSearch('');
             }
           }}
-          placeholder="Search for AI tools (e.g. video editor, chatbot)..."
-          className="flex-1 bg-transparent py-3 sm:py-4 px-4 text-white text-sm sm:text-base outline-none placeholder-gray-500 font-medium"
+          placeholder={window.innerWidth < 768 ? "Search AI tools..." : "Search for AI tools (e.g. video editor, chatbot)..."}
+          className="search-input"
         />
         <button
           type="submit"
-          className={`px-6 sm:px-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-black text-sm rounded-full hover:shadow-lg hover:shadow-primary/25 transition-all active:scale-95`}
+          className="search-button"
         >
           Search
         </button>

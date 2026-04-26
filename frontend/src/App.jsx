@@ -18,6 +18,7 @@ import Contact from './pages/Contact';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import NewsletterPopup from './components/NewsletterPopup';
 
 // Scroll to top on navigation
 const ScrollToTop = () => {
@@ -34,6 +35,7 @@ export default function App() {
       <ThemeProvider>
         <Router>
           <ScrollToTop />
+          <NewsletterPopup />
           <div className="min-h-screen flex flex-col bg-[#0A0F1E] text-white">
             <Navbar />
             <main className="flex-grow">

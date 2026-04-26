@@ -114,9 +114,15 @@ export default function ToolCard({ tool }) {
             </div>
           </div>
           
-          <div className="flex items-center gap-1.5 text-xs font-bold text-primary-light group-hover:gap-2.5 transition-all">
+          <a 
+            href={tool.website.startsWith('http') ? tool.website : `https://${tool.website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-1.5 text-xs font-bold text-primary-light group-hover:gap-2.5 transition-all hover:text-white"
+          >
             Explore <HiExternalLink size={14} />
-          </div>
+          </a>
         </div>
 
         {/* Featured Badge (Optional overlay) */}

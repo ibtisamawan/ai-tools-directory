@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import ToolCard from '../components/ToolCard';
 import { CardSkeleton } from '../components/LoadingSkeleton';
+import { Helmet } from 'react-helmet-async';
 import API from '../api';
 
 export default function Category() {
@@ -66,6 +67,11 @@ export default function Category() {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Best {displayName} AI Tools 2026 | AI Tools Directory</title>
+        <meta name="description" content={`Browse the top ${displayName} AI tools. ${meta.desc} Updated for 2026. Find the best artificial intelligence tools for your needs.`} />
+        <meta name="keywords" content={`${displayName}, AI tools, ${displayName} software, best ${displayName} AI 2026`} />
+      </Helmet>
       {/* Banner */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#1a0533] to-dark-bg border-b border-primary/10">
         <div className="blur-circle w-[400px] h-[400px] bg-primary/10 top-0 left-0"></div>

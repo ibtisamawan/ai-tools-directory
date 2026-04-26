@@ -6,6 +6,8 @@ import SearchBar from '../components/SearchBar';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 import API from '../api';
 import { HiAdjustments } from 'react-icons/hi';
+import { Helmet } from 'react-helmet-async';
+import FAQ from '../components/FAQ';
 
 export default function Tools() {
   const { darkMode } = useTheme();
@@ -97,6 +99,10 @@ export default function Tools() {
 
   return (
     <div className="min-h-screen pb-20">
+      <Helmet>
+        <title>All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory</title>
+        <meta name="description" content="Browse our complete collection of 126+ AI tools. Filter by category, pricing, and rating to find the perfect AI tool for your needs." />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
@@ -219,6 +225,11 @@ export default function Tools() {
           </div>
         </div>
       </div>
+      <FAQ title="Tools Page FAQ" faqs={[
+        { q: "How do I find the right AI tool?", a: "Use our search bar to search by name or use case. Or filter by category to browse tools in your specific area of interest." },
+        { q: "What do the pricing badges mean?", a: "Free = always free, no credit card needed. Freemium = free plan with paid upgrades. Paid = requires subscription to use." },
+        { q: "Are all tools safe to use?", a: "We only list established legitimate AI tools from trusted companies. Always read each tool privacy policy before signing up." }
+      ]} />
     </div>
   );
 }
