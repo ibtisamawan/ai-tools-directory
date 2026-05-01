@@ -47,7 +47,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#0A0F1E] border-t border-gray-800 pt-16 pb-8 px-4">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Col 1 - Brand */}
           <div className="space-y-6">
             <Link to="/" className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
@@ -89,7 +89,7 @@ const Footer = () => {
             <ul className="space-y-4 text-sm text-gray-400">
               <li><Link to="/" className="hover:text-purple-400 transition-colors">Home</Link></li>
               <li><Link to="/tools" className="hover:text-purple-400 transition-colors">All Tools</Link></li>
-              <li><Link to="/tools" className="hover:text-purple-400 transition-colors">Categories</Link></li>
+              <li><Link to="/categories" className="hover:text-purple-400 transition-colors">Categories</Link></li>
               <li><Link to="/submit" className="hover:text-purple-400 transition-colors">Submit Tool</Link></li>
               <li><Link to="/admin" className="hover:text-purple-400 transition-colors">Admin Panel</Link></li>
             </ul>
@@ -115,7 +115,16 @@ const Footer = () => {
               <li><Link to="/tools?category=Image Generation" className="hover:text-purple-400 transition-colors">Image Generation</Link></li>
               <li><Link to="/tools?category=Coding" className="hover:text-purple-400 transition-colors">Coding Tools</Link></li>
               <li><Link to="/tools?category=Education" className="hover:text-purple-400 transition-colors">Education</Link></li>
-              <li><Link to="/tools?category=Marketing" className="hover:text-purple-400 transition-colors">Marketing</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 5 - Recent Blog Posts */}
+          <div className="space-y-6">
+            <h4 className="text-white font-bold uppercase tracking-wider text-xs">Recent Posts</h4>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li><Link to="/blog/ai-tools-to-make-money-2026" className="hover:text-purple-400 transition-colors">10 AI Tools to Make Money</Link></li>
+              <li><Link to="/blog/best-ai-writing-tools-comparison" className="hover:text-purple-400 transition-colors">Best AI Writing Tools</Link></li>
+              <li><Link to="/blog/build-website-fast-with-ai" className="hover:text-purple-400 transition-colors">Build Website with AI</Link></li>
             </ul>
           </div>
         </div>

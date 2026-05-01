@@ -69,6 +69,26 @@ export default function ToolDetail() {
         <title>{tool.name} - AI Tool Features, Reviews & Pricing | AI Tools Directory</title>
         <meta name="description" content={`Discover ${tool.name}. ${tool.shortDescription} Learn about features, pricing, and user reviews for this AI tool in the ${tool.category} category.`} />
         <meta name="keywords" content={`${tool.name}, ${tool.category} AI tool, best AI tools, ${tool.tags?.join(', ')}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": tool.name,
+            "description": tool.shortDescription,
+            "applicationCategory": tool.category,
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": tool.pricing === "Free" ? "0" : "0",
+              "priceCurrency": "USD"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": tool.rating,
+              "reviewCount": tool.totalReviews || 1
+            }
+          })}
+        </script>
       </Helmet>
       {/* Breadcrumb */}
       <nav className={`flex items-center gap-2 text-sm mb-6 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -178,6 +198,12 @@ export default function ToolDetail() {
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* AdSense Slot: Sidebar */}
+          <div className={cardClass}>
+            <div id="adsense-sidebar" className="w-full h-[250px] bg-white/5 border border-dashed border-gray-700 flex items-center justify-center text-gray-600 text-xs uppercase tracking-widest rounded-xl">
+              Advertisement
+            </div>
+          </div>
           <div className={cardClass}>
             <h3 className={`font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Pricing</h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{tool.pricingDetails || 'Contact for pricing'}</p>

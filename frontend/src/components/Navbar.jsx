@@ -50,7 +50,7 @@ const Navbar = () => {
   const navLinks = [
     { name: '🏠 Home', path: '/' },
     { name: '🔧 All Tools', path: '/tools' },
-    { name: '📂 Categories', path: '/tools' }, // Pointing categories to tools as per previous logic
+    { name: '📂 Categories', path: '/categories' },
     { name: '📝 Blog', path: '/blog' },
     { name: 'ℹ️ About', path: '/about' },
     { name: '📞 Contact', path: '/contact' },

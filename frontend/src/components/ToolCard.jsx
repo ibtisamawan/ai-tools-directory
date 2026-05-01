@@ -64,6 +64,8 @@ export default function ToolCard({ tool }) {
                 src={`https://logo.clearbit.com/${getDomain(tool.website)}`} 
                 alt={tool.name}
                 className="w-full h-full object-contain"
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   e.target.nextSibling.style.display = 'flex';
@@ -119,9 +121,10 @@ export default function ToolCard({ tool }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 text-xs font-bold text-primary-light group-hover:gap-2.5 transition-all hover:text-white"
+            className="flex items-center gap-1.5 text-xs font-bold text-primary-light group-hover:gap-2.5 transition-all hover:text-white relative tooltip-trigger"
           >
             Explore <HiExternalLink size={14} />
+            <span className="tooltip hidden absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded shadow-xl border border-gray-700 whitespace-nowrap">Open in new tab</span>
           </a>
         </div>
 

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Tools from './pages/Tools';
 import ToolDetail from './pages/ToolDetail';
-import Category from './pages/Category';
+import Categories from './pages/Categories';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Admin from './pages/Admin';
@@ -19,6 +19,8 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NewsletterPopup from './components/NewsletterPopup';
+import BackToTop from './components/BackToTop';
+import NewsletterBanner from './components/NewsletterBanner';
 
 // Scroll to top on navigation
 const ScrollToTop = () => {
@@ -32,17 +34,35 @@ const ScrollToTop = () => {
 export default function App() {
   return (
     <HelmetProvider>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "AI Tools Directory",
+            "url": "https://ai-tools-directory-orpin.vercel.app",
+            "logo": "https://ai-tools-directory-orpin.vercel.app/logo.png",
+            "sameAs": [
+              "https://www.instagram.com/i.awannn/",
+              "https://www.linkedin.com/in/malik-ibtisam-awan-458b93265/",
+              "https://github.com/ibtisamawan"
+            ]
+          })}
+        </script>
+      </Helmet>
       <ThemeProvider>
         <Router>
           <ScrollToTop />
           <NewsletterPopup />
+          <BackToTop />
+          <NewsletterBanner />
           <div className="min-h-screen flex flex-col bg-[#0A0F1E] text-white">
             <Navbar />
             <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/tools" element={<Tools />} />
-                <Route path="/category/:name" element={<Category />} />
+                <Route path="/categories" element={<Categories />} />
                 <Route path="/tools/:slug" element={<ToolDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

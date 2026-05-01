@@ -35,8 +35,14 @@ const Contact = () => {
   return (
     <div className="bg-[#0A0F1E] text-white py-20 px-4">
       <Helmet>
-        <title>Contact Us - AI Tools Directory | Support & Inquiries</title>
-        <meta name="description" content="Contact the AI Tools Directory team for support, tool submissions, advertising inquiries, or partnership opportunities. We reply within 24 hours." />
+        <title>Contact Us - AI Tools Directory | Get in Touch</title>
+        <meta name="description" content="Contact AI Tools Directory team. Submit tool suggestions, report issues or inquire about advertising. We reply within 24 hours." />
+        <meta name="keywords" content="contact AI tools directory, submit AI tool, advertise AI tools" />
+        <meta property="og:title" content="Contact Us - AI Tools Directory | Get in Touch" />
+        <meta property="og:description" content="Contact AI Tools Directory team. Submit tool suggestions, report issues or inquire about advertising. We reply within 24 hours." />
+        <meta property="og:url" content="https://YOUR-DOMAIN.com/contact" />
+        <meta name="twitter:title" content="Contact Us - AI Tools Directory | Get in Touch" />
+        <meta name="twitter:description" content="Contact AI Tools Directory team. Submit tool suggestions, report issues or inquire about advertising. We reply within 24 hours." />
       </Helmet>
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">

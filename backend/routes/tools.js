@@ -8,6 +8,7 @@ router.get('/', toolController.getTools);
 router.get('/search', toolController.searchTools);
 router.get('/stats', authMiddleware, toolController.getStats);
 router.get('/category/:name', toolController.getToolsByCategory);
+router.get('/sitemap', toolController.getSitemap);
 router.get('/:id', toolController.getToolById);
 
 // Admin routes (protected)

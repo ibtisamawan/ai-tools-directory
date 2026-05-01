@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://YOUR-DOMAIN.com/sitemap.xml
+Sitemap: https://YOUR-DOMAIN.com/api/sitemap
+
+# Search engine bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

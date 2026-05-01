@@ -16,7 +16,7 @@ export default function Tools() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(searchParams.get('category') || 'All');
   const [pricing, setPricing] = useState('');
   const [sort, setSort] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
@@ -50,8 +50,28 @@ export default function Tools() {
 
   useEffect(() => {
     const q = searchParams.get('q');
+    const urlCategory = searchParams.get('category');
+    
+    if (urlCategory && urlCategory !== category) {
+      setCategory(urlCategory);
+    } else if (!urlCategory && category !== 'All') {
+      setCategory('All');
+    }
+    
     fetchTools(q);
   }, [page, category, pricing, sort, searchParams]);
+
+  const handleCategoryClick = (cName) => {
+    setCategory(cName);
+    setPage(1);
+    const newParams = new URLSearchParams(searchParams);
+    if (cName && cName !== 'All') {
+      newParams.set('category', cName);
+    } else {
+      newParams.delete('category');
+    }
+    setSearchParams(newParams);
+  };
 
   // Scroll animations
   useEffect(() => {
@@ -101,7 +121,13 @@ export default function Tools() {
     <div className="min-h-screen pb-20">
       <Helmet>
         <title>All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory</title>
-        <meta name="description" content="Browse our complete collection of 126+ AI tools. Filter by category, pricing, and rating to find the perfect AI tool for your needs." />
+        <meta name="description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
+        <meta name="keywords" content="all AI tools, AI tools list, AI tools by category, free AI tools, paid AI tools, best AI software" />
+        <meta property="og:title" content="All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory" />
+        <meta property="og:description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
+        <meta property="og:url" content="https://YOUR-DOMAIN.com/tools" />
+        <meta name="twitter:title" content="All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory" />
+        <meta name="twitter:description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -122,10 +148,7 @@ export default function Tools() {
               </div>
               <div className={`${showFilters ? 'block' : 'hidden lg:block'} space-y-1`}>
                 {categories.map(c => (
-                  <button key={c.name} onClick={() => { 
-                    setCategory(c.name); 
-                    setPage(1);
-                  }}
+                  <button key={c.name} onClick={() => handleCategoryClick(c.name)}
                     className={filterItemClass(c.name === category)}>
                     <span className="flex justify-between items-center w-full">
                       <span>{c.name}</span>

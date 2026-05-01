@@ -239,3 +239,19 @@ html {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+/* Tooltips */
+.tooltip-trigger:hover .tooltip {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Animations */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s infinite ease-in-out;
+}

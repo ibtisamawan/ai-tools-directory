@@ -94,9 +94,27 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>AI Tools Directory - Find the Best AI Tools 2026 | 126+ Tools</title>
-        <meta name="description" content="Discover 126+ best AI tools across 25 categories. Find AI tools for writing, coding, image generation, marketing and more. Free to use." />
-        <meta name="keywords" content="AI tools, artificial intelligence tools, best AI tools 2026, AI software directory" />
+        <title>AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free</title>
+        <meta name="description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
+        <meta name="keywords" content="AI tools, best AI tools 2026, artificial intelligence tools, free AI tools, AI tools directory, top AI tools" />
+        <meta property="og:title" content="AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free" />
+        <meta property="og:description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
+        <meta property="og:url" content="https://YOUR-DOMAIN.com/" />
+        <meta name="twitter:title" content="AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free" />
+        <meta name="twitter:description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://ai-tools-directory-orpin.vercel.app/",
+            "name": "AI Tools Directory",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://ai-tools-directory-orpin.vercel.app/tools?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
@@ -128,6 +146,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* AdSense Slot: Home Top */}
+      <div className="max-w-7xl mx-auto px-4 py-8 flex justify-center">
+        <div id="adsense-home-top" className="w-full h-[100px] bg-white/5 border border-dashed border-gray-700 flex items-center justify-center text-gray-600 text-xs uppercase tracking-widest rounded-xl">
+          Advertisement
+        </div>
+      </div>
 
       {/* Stats Bar */}
       <section className="bg-primary/[0.05] border-y border-primary/15">

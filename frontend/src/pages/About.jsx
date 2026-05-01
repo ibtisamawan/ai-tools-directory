@@ -23,8 +23,14 @@ const About = () => {
   return (
     <div className="bg-[#0A0F1E] text-white">
       <Helmet>
-        <title>About AI Tools Directory - Your Trusted AI Tools Guide</title>
-        <meta name="description" content="Learn about AI Tools Directory - the free platform helping users discover the best AI tools. Our mission, story, and team." />
+        <title>About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026</title>
+        <meta name="description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
+        <meta name="keywords" content="about AI tools directory, AI tools website, AI directory" />
+        <meta property="og:title" content="About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026" />
+        <meta property="og:description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
+        <meta property="og:url" content="https://YOUR-DOMAIN.com/about" />
+        <meta name="twitter:title" content="About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026" />
+        <meta name="twitter:description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
       </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden" style={{ background: 'radial-gradient(ellipse at top, #1a0533, #0A0F1E)' }}>

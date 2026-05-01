@@ -242,3 +242,31 @@ exports.getStats = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// Generate dynamic sitemap XML
+exports.getSitemap = async (req, res) => {
+  try {
+    const tools = await Tool.find({ approved: true }).select('slug updatedAt');
+    const baseUrl = process.env.FRONTEND_URL || 'https://ai-tools-directory-orpin.vercel.app';
+    
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    
+    tools.forEach(tool => {
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}/tools/${tool.slug || tool._id}</loc>\n`;
+      xml += `    <lastmod>${new Date(tool.updatedAt).toISOString().split('T')[0]}</lastmod>\n`;
+      xml += '    <changefreq>weekly</changefreq>\n';
+      xml += '    <priority>0.6</priority>\n';
+      xml += '  </url>\n';
+    });
+    
+    xml += '</urlset>';
+    
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Sitemap error:', err);
+    res.status(500).send('Error generating sitemap');
+  }
+};
