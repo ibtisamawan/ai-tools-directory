@@ -397,18 +397,16 @@ const BlogPost = () => {
               />
 
               <div className="mt-12 pt-12 border-t border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex flex-wrap gap-2">
-              {['AI', 'Technology', 'Future', 'Tools', '2026'].map(tag => (
-                <span key={tag} className="px-4 py-1.5 bg-gray-800 rounded-lg text-sm text-gray-400 font-bold hover:bg-purple-600 hover:text-white transition-all cursor-pointer">#{tag}</span>
-              ))}
-            </div>
-            <div className="flex space-x-4">
-               <button className="flex-1 md:flex-none px-6 py-3 border border-gray-800 rounded-xl hover:border-purple-500 hover:bg-purple-500/10 transition-all text-sm font-bold">Share on X</button>
-               <button className="flex-1 md:flex-none px-6 py-3 border border-gray-800 rounded-xl hover:border-blue-500 hover:bg-blue-500/10 transition-all text-sm font-bold">LinkedIn</button>
-            </div>
-          </div>
-        </div>
-
+                <div className="flex flex-wrap gap-2">
+                  {['AI', 'Technology', 'Future', 'Tools', '2026'].map(tag => (
+                    <span key={tag} className="px-4 py-1.5 bg-gray-800 rounded-lg text-sm text-gray-400 font-bold hover:bg-purple-600 hover:text-white transition-all cursor-pointer">#{tag}</span>
+                  ))}
+                </div>
+                <div className="flex space-x-4">
+                   <button className="flex-1 md:flex-none px-6 py-3 border border-gray-800 rounded-xl hover:border-purple-500 hover:bg-purple-500/10 transition-all text-sm font-bold">Share on X</button>
+                   <button className="flex-1 md:flex-none px-6 py-3 border border-gray-800 rounded-xl hover:border-blue-500 hover:bg-blue-500/10 transition-all text-sm font-bold">LinkedIn</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
