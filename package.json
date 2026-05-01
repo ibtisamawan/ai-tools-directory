@@ -6,7 +6,7 @@
     "backend"
   ],
   "scripts": {
-    "build": "npm run build -w frontend && (mkdir dist || true) && cp -r frontend/dist/* dist/",
+    "build": "npm run build -w frontend && rm -rf dist && mkdir dist && cp -rv frontend/dist/* dist/",
     "start": "npm start -w backend"
   },
   "engines": {
