@@ -1,97 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import API from '../api';
 
 const BlogPost = () => {
   const { slug } = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Data for all blog posts
-  const allContent = {
-    'top-10-ai-tools-2026': {
-      title: 'Top 10 AI Tools You Must Try in 2026',
-      category: 'AI Tools',
-      date: 'April 20, 2026',
-      time: '10 min',
-      image: '/blog/top-10-ai.png',
-      description: 'The ultimate guide to the most transformative AI tools of 2026. From generative video to autonomous coding agents.',
-      body: `
-        <p>AI tools are transforming how we work in 2026. From writing to image generation, here are the top 10 tools everyone must try to stay ahead in their career and creative pursuits.</p>
-        
-        <h2>1. ChatGPT (OpenAI)</h2>
-        <p>Still the gold standard for conversational AI, the 2026 version offers deeper multimodal understanding and real-time world synchronization. It can now act as a full personal agent, managing your calendar, emails, and even complex project planning with ease.</p>
-        
-        <h2>2. Claude (Anthropic)</h2>
-        <p>Claude remains the safest and most reliable assistant for complex document analysis and long-form writing. Its "Constitutional AI" approach ensures that outputs are not only high-quality but also ethically aligned.</p>
-        
-        <h2>3. Midjourney v7</h2>
-        <p>With its v7 release, Midjourney now generates near-photorealistic video from simple text prompts, setting a new bar for digital art. The level of detail and artistic control is unprecedented.</p>
-        
-        <h2>4. GitHub Copilot Workspace</h2>
-        <p>The developer's best friend has evolved into a full autonomous coding agent that can build entire features from natural language specs. It doesn't just suggest lines of code anymore; it plans, writes, and tests full applications.</p>
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const res = await API.get(`/blogs/${slug}`);
+        if (res.data.success) {
+          setPost(res.data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch blog post:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPost();
+  }, [slug]);
 
-        <h2>5. Perplexity AI</h2>
-        <p>The definitive search engine for the AI age, providing cited answers and real-time research in seconds. It has replaced traditional search for millions of students and professionals.</p>
-      `
-    },
-    'mastering-ai-tool-seo-2026': {
-      title: 'Mastering AI Tool SEO in 2026: How to Rank Your Directory',
-      category: 'SEO',
-      date: 'April 25, 2026',
-      time: '12 min',
-      image: '/blog/ai-seo.png',
-      description: 'Learn the secret strategies to rank your AI tool directory on the first page of Google. From structured data to content clusters.',
-      body: `
-        <p>Building an AI tool directory is easy, but getting it to rank in 2026 is a massive challenge. Here is how you dominate the rankings.</p>
-        
-        <h2>1. Structured Data is No Longer Optional</h2>
-        <p>In 2026, search engines rely heavily on <strong>JSON-LD</strong> to understand the entities on your page. For an AI directory, you MUST use <em>SoftwareApplication</em> schema for tools.</p>
-        
-        <h2>2. Content Velocity vs. Content Quality</h2>
-        <p>Don't just auto-generate descriptions. Search engines now detect "low-effort" AI content. To rank, you need to add unique human value—real user reviews and expert analysis.</p>
-        
-        <h2>3. Technical Performance</h2>
-        <p>Your site must be blazing fast. In 2026, Google prioritizes "Interaction to Next Paint" (INP). Using frameworks like <strong>Vite</strong> and <strong>React</strong> with proper code splitting is essential.</p>
-      `
-    },
-    'ai-tools-make-money-pakistan': {
-      title: 'How to Use AI Tools to Make Money Online in Pakistan',
-      category: 'Make Money',
-      date: 'April 15, 2026',
-      time: '12 min',
-      image: '/blog/ai-pakistan.png',
-      description: 'A comprehensive guide for Pakistani freelancers and entrepreneurs on how to use AI tools to earn dollars on Fiverr, Upwork, and more.',
-      body: `
-        <p>The digital landscape in Pakistan is shifting rapidly. Pakistani freelancers are using AI tools to increase their output by 5x to 10x and earn significantly more in dollars.</p>
-        
-        <h2>1. Freelance Content Writing with AI</h2>
-        <p>Tools like <strong>ChatGPT</strong> and <strong>Jasper</strong> can help you generate ideas, outlines, and first drafts. The key is to add your "human touch"—fact-checking and localizing the content.</p>
-        
-        <h2>2. Graphic Design & Social Media</h2>
-        <p>Using <strong>Canva Magic Studio</strong> and <strong>Midjourney</strong>, you can create stunning visuals for international clients. You can offer services like "AI Brand Identity Design."</p>
-      `
-    },
-    'ai-tools-for-students': {
-      title: 'AI Tools for Students: Study Smarter Not Harder in 2026',
-      category: 'Education',
-      date: 'April 10, 2026',
-      time: '8 min',
-      image: '/blog/ai-students.png',
-      description: 'The best AI tools for students to help with homework, research, writing, and language learning. Study more effectively in 2026.',
-      body: `
-        <p>Education is being redefined by artificial intelligence. Students who know how to use these tools responsibly are seeing massive improvements in their grades.</p>
-        
-        <h2>1. Perplexity: The Research Partner</h2>
-        <p>Forget scrolling through pages of Google results. Perplexity gives you direct, cited answers to your questions. It's perfect for finding reliable sources for your essays.</p>
-        
-        <h2>2. Khanmigo: Your Personal AI Tutor</h2>
-        <p>Developed by Khan Academy, Khanmigo doesn't just give you the answers; it guides you through the process of solving math problems or understanding scientific concepts.</p>
-      `
-    }
-  };
-
-  const [scrollProgress, setScrollProgress] = React.useState(0);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = (window.scrollY / totalHeight) * 100;
@@ -102,6 +36,7 @@ const BlogPost = () => {
   }, []);
 
   const extractHeaders = (html) => {
+    if (!html) return [];
     const regex = /<h2>(.*?)<\/h2>/g;
     const headers = [];
     let match;
@@ -113,14 +48,22 @@ const BlogPost = () => {
     return headers;
   };
 
-  const post = allContent[slug] || {
-    title: 'Post Not Found',
-    category: 'Unknown',
-    date: 'Unknown',
-    time: 'Unknown',
-    description: 'The article you are looking for does not exist.',
-    body: '<p>The article you are looking for does not exist or has been moved.</p>'
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0A0F1E] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-[#0A0F1E] flex flex-col items-center justify-center text-white">
+        <h1 className="text-4xl font-black mb-4">Post Not Found</h1>
+        <Link to="/blog" className="text-purple-400 hover:underline">Back to Blog</Link>
+      </div>
+    );
+  }
 
   const headers = extractHeaders(post.body);
   const bodyWithIds = post.body.replace(/<h2>(.*?)<\/h2>/g, (match, p1) => {
@@ -136,7 +79,7 @@ const BlogPost = () => {
       />
       <Helmet>
         <title>{post.title} | AI Tools Blog</title>
-        <meta name="description" content={post.description} />
+        <meta name="description" content={post.summary} />
       </Helmet>
       <article className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">

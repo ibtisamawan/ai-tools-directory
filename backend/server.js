@@ -28,12 +28,14 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 const toolRoutes = require('./routes/tools');
 const categoryRoutes = require('./routes/categories');
+const blogRoutes = require('./routes/blogs');
 const authRoutes = require('./routes/auth');
 const newsletterRoutes = require('./routes/newsletter');
 const submitRoutes = require('./routes/submit');
 
 app.use('/api/tools', toolRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/blogs', blogRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/submit', submitRoutes);
