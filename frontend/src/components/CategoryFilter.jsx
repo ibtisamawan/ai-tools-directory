@@ -35,8 +35,8 @@ export default function CategoryFilter({ selected = '', onSelect }) {
     }
   };
 
-  // Determine active category from URL or prop
-  const activeCategory = selected || searchParams.get('category') || 'All';
+  // Determine active category from URL or prop. If on Home (no onSelect/selected), don't default to 'All' for styling
+  const activeCategory = selected || searchParams.get('category') || (selected === 'All' ? 'All' : '');
 
   return (
     <div className="w-full">
