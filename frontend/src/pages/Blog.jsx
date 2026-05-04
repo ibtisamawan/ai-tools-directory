@@ -12,7 +12,38 @@ const Blog = () => {
       time: '5 min',
       date: 'April 20, 2026',
       summary: 'AI tools are transforming how we work in 2026. From writing to image generation here are the top 10 tools everyone must try.',
-      featured: true
+      featured: true,
+      image: '/blog/top-10-ai.png'
+    },
+    {
+      slug: 'mastering-ai-tool-seo-2026',
+      title: 'Mastering AI Tool SEO in 2026: How to Rank Your Directory',
+      category: 'SEO',
+      color: 'green',
+      time: '12 min',
+      date: 'April 25, 2026',
+      summary: 'Learn the secret strategies to rank your AI tool directory on the first page of Google. From structured data to content clusters.',
+      image: '/blog/ai-seo.png'
+    },
+    {
+      slug: 'ai-tools-make-money-pakistan',
+      title: 'How to Use AI Tools to Make Money Online in Pakistan',
+      category: 'Make Money',
+      color: 'green',
+      time: '6 min',
+      date: 'April 15, 2026',
+      summary: 'Pakistani freelancers are using AI to earn dollars online. Here is how you can do the same on Fiverr and Upwork.',
+      image: '/blog/ai-pakistan.png'
+    },
+    {
+      slug: 'ai-tools-for-students',
+      title: 'AI Tools for Students: Study Smarter Not Harder in 2026',
+      category: 'Education',
+      color: 'orange',
+      time: '4 min',
+      date: 'April 10, 2026',
+      summary: 'Students worldwide use AI to study more effectively. Here are the best AI tools for homework and learning.',
+      image: '/blog/ai-students.png'
     },
     {
       slug: 'chatgpt-vs-claude-vs-gemini',
@@ -24,15 +55,6 @@ const Blog = () => {
       summary: 'We compared the three biggest AI chatbots to help you choose right. Detailed analysis of features and pricing.',
     },
     {
-      slug: 'ai-tools-make-money-pakistan',
-      title: 'How to Use AI Tools to Make Money Online in Pakistan',
-      category: 'Make Money',
-      color: 'green',
-      time: '6 min',
-      date: 'April 15, 2026',
-      summary: 'Pakistani freelancers are using AI to earn dollars online. Here is how you can do the same on Fiverr and Upwork.',
-    },
-    {
       slug: 'best-free-ai-image-generators',
       title: 'Best Free AI Image Generators Compared for 2026',
       category: 'Image AI',
@@ -40,15 +62,6 @@ const Blog = () => {
       time: '5 min',
       date: 'April 12, 2026',
       summary: 'We tested all top free AI image generators so you do not have to. Midjourney vs DALL-E vs Stable Diffusion.',
-    },
-    {
-      slug: 'ai-tools-for-students',
-      title: 'AI Tools for Students: Study Smarter Not Harder in 2026',
-      category: 'Education',
-      color: 'orange',
-      time: '4 min',
-      date: 'April 10, 2026',
-      summary: 'Students worldwide use AI to study more effectively. Here are the best AI tools for homework and learning.',
     },
     { slug: 'ai-tools-to-make-money-2026', title: '10 AI Tools to Make Money Online in 2026', category: 'Make Money', color: 'green', time: '8 min', date: 'April 08, 2026', summary: 'Learn how to use the latest AI tools to create multiple income streams online this year.' },
     { slug: 'best-ai-writing-tools-comparison', title: 'Best AI Writing Tools: ChatGPT vs Claude vs Jasper', category: 'Writing', color: 'purple', time: '7 min', date: 'April 05, 2026', summary: 'We compare the top AI writing assistants to help you choose the best one for your content needs.' },
@@ -101,10 +114,16 @@ const Blog = () => {
         {featuredPost && (
           <Link to={`/blog/${featuredPost.slug}`} className="group block mb-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-[#111827] border border-gray-800 rounded-[2.5rem] overflow-hidden p-6 md:p-10 hover:border-purple-500/50 transition-all">
-              <div className="h-64 md:h-[400px] bg-gradient-to-br from-purple-900 to-indigo-900 rounded-[2rem] flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                <span className="text-6xl font-black text-white/10 uppercase tracking-tighter select-none">AI TOOLS</span>
-                <div className="absolute top-4 left-4">
+              <div className="h-64 md:h-[400px] rounded-[2rem] flex items-center justify-center relative overflow-hidden bg-gray-900">
+                {featuredPost.image ? (
+                  <img src={featuredPost.image} alt={featuredPost.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-indigo-900 opacity-50"></div>
+                    <span className="text-6xl font-black text-white/10 uppercase tracking-tighter select-none">AI TOOLS</span>
+                  </>
+                )}
+                <div className="absolute top-4 left-4 z-10">
                   <span className={`px-4 py-1.5 rounded-full text-xs font-bold border ${getTagColor(featuredPost.color)}`}>
                     ★ FEATURED
                   </span>
@@ -137,8 +156,13 @@ const Blog = () => {
           {regularPosts.map((post) => (
             <Link key={post.slug} to={`/blog/${post.slug}`} className="group block h-full">
               <div className="flex flex-col h-full bg-[#111827] border border-gray-800 rounded-3xl overflow-hidden hover:border-purple-500/50 transition-all">
-                <div className="h-48 bg-gradient-to-br from-gray-800 to-purple-900/20 flex items-center justify-center">
-                   <span className="text-4xl font-black text-white/5 uppercase tracking-tighter">{post.category}</span>
+                <div className="h-48 flex items-center justify-center relative overflow-hidden bg-gray-900">
+                  {post.image ? (
+                    <img src={post.image} alt={post.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-purple-900/20"></div>
+                  )}
+                   <span className="relative z-10 text-4xl font-black text-white/5 uppercase tracking-tighter">{post.category}</span>
                 </div>
                 <div className="p-6 flex flex-col flex-1 space-y-4">
                   <div className="flex items-center justify-between text-xs text-gray-500">
