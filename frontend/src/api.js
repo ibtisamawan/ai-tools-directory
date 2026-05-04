@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_URL || '/api';
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: baseURL.endsWith('/') ? baseURL : `${baseURL}/`,
 });
 
 const cache = new Map();
@@ -10,6 +11,11 @@ API.interceptors.request.use((config) => {
   const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // Ensure relative URLs don't have leading slash so they append to baseURL path correctly
+  if (config.url && config.url.startsWith('/')) {
+    config.url = config.url.substring(1);
   }
 
   // Simple in-memory cache for GET requests
