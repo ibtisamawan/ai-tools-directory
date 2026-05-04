@@ -51,7 +51,7 @@ export default function CategoryFilter({ selected = '', onSelect }) {
                 : 'bg-transparent border-[#374151] text-[#9CA3AF] hover:border-primary hover:text-white hover:bg-primary/15'
             }`}
           >
-            <span className="text-base">{cat.icon}</span>
+            <span className="text-sm">{cat.icon}</span>
             <span>{cat.name}</span>
           </button>
         ))}
