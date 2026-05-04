@@ -120,14 +120,15 @@ export default function Tools() {
   return (
     <div className="min-h-screen pb-20">
       <Helmet>
-        <title>All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory</title>
-        <meta name="description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
+        <title>All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory</title>
+        <meta name="description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
         <meta name="keywords" content="all AI tools, AI tools list, AI tools by category, free AI tools, paid AI tools, best AI software" />
-        <meta property="og:title" content="All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory" />
-        <meta property="og:description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/tools" />
-        <meta name="twitter:title" content="All AI Tools - Browse 126+ AI Tools by Category | AI Tools Directory" />
-        <meta name="twitter:description" content="Browse complete collection of 126+ AI tools. Filter by category, pricing and rating to find perfect AI tool for writing, coding, design and marketing." />
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/tools" />
+        <meta property="og:title" content="All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory" />
+        <meta property="og:description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/tools" />
+        <meta name="twitter:title" content="All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory" />
+        <meta name="twitter:description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}

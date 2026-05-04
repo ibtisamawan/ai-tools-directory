@@ -24,13 +24,14 @@ const About = () => {
     <div className="bg-[#0A0F1E] text-white">
       <Helmet>
         <title>About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026</title>
-        <meta name="description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
+        <meta name="description" content="Learn about AI Tools Directory — the go-to platform for discovering the best AI tools. Browse 120+ tools across 25 categories, completely free. Our mission, story, and team." />
         <meta name="keywords" content="about AI tools directory, AI tools website, AI directory" />
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/about" />
         <meta property="og:title" content="About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026" />
-        <meta property="og:description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/about" />
+        <meta property="og:description" content="Learn about AI Tools Directory — the go-to platform for discovering the best AI tools. Browse 120+ tools across 25 categories, completely free. Our mission, story, and team." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/about" />
         <meta name="twitter:title" content="About Us - AI Tools Directory | Your Trusted AI Tools Guide Since 2026" />
-        <meta name="twitter:description" content="Learn about AI Tools Directory. We help discover best AI tools. Browse 126+ tools across 25 categories completely free. Our mission and story." />
+        <meta name="twitter:description" content="Learn about AI Tools Directory — the go-to platform for discovering the best AI tools. Browse 120+ tools across 25 categories, completely free." />
       </Helmet>
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden" style={{ background: 'radial-gradient(ellipse at top, #1a0533, #0A0F1E)' }}>

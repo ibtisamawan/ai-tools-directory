@@ -66,9 +66,18 @@ export default function ToolDetail() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Helmet>
-        <title>{tool.name} - AI Tool Features, Reviews & Pricing | AI Tools Directory</title>
+        <title>{tool.name} - AI Tool Features, Reviews & Pricing</title>
         <meta name="description" content={`Discover ${tool.name}. ${tool.shortDescription} Learn about features, pricing, and user reviews for this AI tool in the ${tool.category} category.`} />
         <meta name="keywords" content={`${tool.name}, ${tool.category} AI tool, best AI tools, ${tool.tags?.join(', ')}`} />
+        <link rel="canonical" href={`https://ai-tools-directory-orpin.vercel.app/tools/${tool.slug || tool._id}`} />
+        <meta property="og:title" content={`${tool.name} - AI Tool Features, Reviews & Pricing`} />
+        <meta property="og:description" content={`Discover ${tool.name}. ${tool.shortDescription} Learn about features, pricing, and user reviews.`} />
+        <meta property="og:url" content={`https://ai-tools-directory-orpin.vercel.app/tools/${tool.slug || tool._id}`} />
+        <meta property="og:type" content="website" />
+        {tool.logo && <meta property="og:image" content={tool.logo} />}
+        <meta name="twitter:title" content={`${tool.name} - AI Tool Features, Reviews & Pricing`} />
+        <meta name="twitter:description" content={`Discover ${tool.name}. ${tool.shortDescription} Learn about features, pricing, and user reviews.`} />
+        {/* SoftwareApplication Schema */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -77,16 +86,31 @@ export default function ToolDetail() {
             "description": tool.shortDescription,
             "applicationCategory": tool.category,
             "operatingSystem": "Web",
+            "url": `https://ai-tools-directory-orpin.vercel.app/tools/${tool.slug || tool._id}`,
             "offers": {
               "@type": "Offer",
-              "price": tool.pricing === "Free" ? "0" : "0",
+              "price": tool.pricing === 'Free' ? '0' : '',
               "priceCurrency": "USD"
             },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": tool.rating,
-              "reviewCount": tool.totalReviews || 1
-            }
+            ...(tool.totalReviews > 0 && {
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": tool.rating,
+                "reviewCount": tool.totalReviews
+              }
+            })
+          })}
+        </script>
+        {/* BreadcrumbList Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-tools-directory-orpin.vercel.app/" },
+              { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://ai-tools-directory-orpin.vercel.app/tools" },
+              { "@type": "ListItem", "position": 3, "name": tool.name, "item": `https://ai-tools-directory-orpin.vercel.app/tools/${tool.slug || tool._id}` }
+            ]
           })}
         </script>
       </Helmet>

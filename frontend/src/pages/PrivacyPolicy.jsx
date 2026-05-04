@@ -73,13 +73,14 @@ const PrivacyPolicy = () => {
     <div className="bg-[#0A0F1E] text-white py-12 px-4 md:py-20">
       <Helmet>
         <title>Privacy Policy - AI Tools Directory | How We Protect Your Data</title>
-        <meta name="description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses and protects your personal information including Google AdSense cookies." />
+        <meta name="description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses, and protects your personal information — including details about Google AdSense, cookies, and your rights." />
         <meta name="keywords" content="privacy policy, AI tools directory privacy, data protection" />
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/privacy-policy" />
         <meta property="og:title" content="Privacy Policy - AI Tools Directory | How We Protect Your Data" />
-        <meta property="og:description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses and protects your personal information including Google AdSense cookies." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/privacy-policy" />
+        <meta property="og:description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses, and protects your personal information — including details about Google AdSense, cookies, and your rights." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/privacy-policy" />
         <meta name="twitter:title" content="Privacy Policy - AI Tools Directory | How We Protect Your Data" />
-        <meta name="twitter:description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses and protects your personal information including Google AdSense cookies." />
+        <meta name="twitter:description" content="Read our complete privacy policy. Learn how AI Tools Directory collects, uses, and protects your personal information." />
       </Helmet>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">

@@ -8,8 +8,18 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:5173',
+  'https://ai-tools-directory-orpin.vercel.app',
+  'http://localhost:5173',
+];
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (server-to-server, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -27,6 +37,59 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/submit', submitRoutes);
+
+// Dynamic XML Sitemap - auto-generates URLs for all tools from MongoDB
+const SITE_URL = 'https://ai-tools-directory-orpin.vercel.app';
+app.get('/api/sitemap', async (req, res) => {
+  try {
+    const Tool = require('./models/Tool');
+    const tools = await Tool.find({ isActive: { $ne: false } }, 'slug _id updatedAt').lean();
+
+    const staticPages = [
+      { url: '/', priority: '1.0', changefreq: 'daily' },
+      { url: '/tools', priority: '0.9', changefreq: 'daily' },
+      { url: '/categories', priority: '0.8', changefreq: 'weekly' },
+      { url: '/blog', priority: '0.8', changefreq: 'weekly' },
+      { url: '/about', priority: '0.7', changefreq: 'monthly' },
+      { url: '/contact', priority: '0.6', changefreq: 'monthly' },
+      { url: '/submit', priority: '0.6', changefreq: 'monthly' },
+      { url: '/privacy-policy', priority: '0.5', changefreq: 'monthly' },
+    ];
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const staticUrls = staticPages.map(page => `
+  <url>
+    <loc>${SITE_URL}${page.url}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`).join('');
+
+    const toolUrls = tools.map(tool => {
+      const slug = tool.slug || tool._id.toString();
+      const lastmod = tool.updatedAt ? tool.updatedAt.toISOString().split('T')[0] : today;
+      return `
+  <url>
+    <loc>${SITE_URL}/tools/${slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    }).join('');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${toolUrls}
+</urlset>`;
+
+    res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+    res.send(xml);
+  } catch (err) {
+    console.error('Sitemap error:', err.message);
+    res.status(500).send('Error generating sitemap');
+  }
+});
 
 // Health check
 app.get('/api/health', (req, res) => {

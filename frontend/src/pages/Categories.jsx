@@ -41,13 +41,14 @@ export default function Categories() {
     <div className="min-h-screen pb-20">
       <Helmet>
         <title>AI Tools Categories - Browse 25 AI Tool Categories | AI Tools Directory</title>
-        <meta name="description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find tools by category." />
+        <meta name="description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find the best AI tools by category." />
         <meta name="keywords" content="AI tool categories, AI chatbots, AI image tools, AI coding tools, AI marketing tools" />
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/categories" />
         <meta property="og:title" content="AI Tools Categories - Browse 25 AI Tool Categories | AI Tools Directory" />
-        <meta property="og:description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find tools by category." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/categories" />
+        <meta property="og:description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find the best AI tools by category." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/categories" />
         <meta name="twitter:title" content="AI Tools Categories - Browse 25 AI Tool Categories | AI Tools Directory" />
-        <meta name="twitter:description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find tools by category." />
+        <meta name="twitter:description" content="Explore 25 AI tool categories including chatbots, image generation, coding, marketing, education, healthcare and more. Find the best AI tools by category." />
       </Helmet>
 
       {/* Header */}

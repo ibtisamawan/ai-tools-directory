@@ -79,14 +79,15 @@ const Blog = () => {
   return (
     <div className="bg-[#0A0F1E] text-white py-12 px-4 md:py-20">
       <Helmet>
-        <title>AI Tools Blog - Latest Reviews Guides and News 2026 | AI Tools Directory</title>
-        <meta name="description" content="Read latest AI tool reviews, comparisons and guides. Stay updated with best artificial intelligence tools and learn how to use them effectively." />
+        <title>AI Tools Blog - Latest Reviews, Guides and News 2026 | AI Tools Directory</title>
+        <meta name="description" content="Read the latest AI tool reviews, comparisons, and guides. Stay updated on the best artificial intelligence tools and learn how to use them effectively in 2026." />
         <meta name="keywords" content="AI tools blog, AI tools review, AI tools guide, best AI tools 2026, AI news" />
-        <meta property="og:title" content="AI Tools Blog - Latest Reviews Guides and News 2026 | AI Tools Directory" />
-        <meta property="og:description" content="Read latest AI tool reviews, comparisons and guides. Stay updated with best artificial intelligence tools and learn how to use them effectively." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/blog" />
-        <meta name="twitter:title" content="AI Tools Blog - Latest Reviews Guides and News 2026 | AI Tools Directory" />
-        <meta name="twitter:description" content="Read latest AI tool reviews, comparisons and guides. Stay updated with best artificial intelligence tools and learn how to use them effectively." />
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/blog" />
+        <meta property="og:title" content="AI Tools Blog - Latest Reviews, Guides and News 2026 | AI Tools Directory" />
+        <meta property="og:description" content="Read the latest AI tool reviews, comparisons, and guides. Stay updated on the best artificial intelligence tools and learn how to use them effectively in 2026." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/blog" />
+        <meta name="twitter:title" content="AI Tools Blog - Latest Reviews, Guides and News 2026 | AI Tools Directory" />
+        <meta name="twitter:description" content="Read the latest AI tool reviews, comparisons, and guides. Stay updated on the best artificial intelligence tools and learn how to use them effectively in 2026." />
       </Helmet>
       <div className="container mx-auto max-w-6xl">
         <div className="mb-16 text-center md:text-left">

@@ -94,27 +94,15 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free</title>
-        <meta name="description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
+        <title>AI Tools Directory - Find Best AI Tools 2026 | 120+ Tools Free</title>
+        <meta name="description" content="Discover 120+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
         <meta name="keywords" content="AI tools, best AI tools 2026, artificial intelligence tools, free AI tools, AI tools directory, top AI tools" />
-        <meta property="og:title" content="AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free" />
-        <meta property="og:description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
-        <meta property="og:url" content="https://YOUR-DOMAIN.com/" />
-        <meta name="twitter:title" content="AI Tools Directory - Find Best AI Tools 2026 | 126+ Tools Free" />
-        <meta name="twitter:description" content="Discover 126+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "url": "https://ai-tools-directory-orpin.vercel.app/",
-            "name": "AI Tools Directory",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://ai-tools-directory-orpin.vercel.app/tools?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })}
-        </script>
+        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/" />
+        <meta property="og:title" content="AI Tools Directory - Find Best AI Tools 2026 | 120+ Tools Free" />
+        <meta property="og:description" content="Discover 120+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
+        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/" />
+        <meta name="twitter:title" content="AI Tools Directory - Find Best AI Tools 2026 | 120+ Tools Free" />
+        <meta name="twitter:description" content="Discover 120+ best AI tools across 25 categories. Find perfect AI tools for writing, coding, image generation, marketing and more. 100% free." />
       </Helmet>
 
       {/* Hero Section */}

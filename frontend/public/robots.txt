@@ -5,8 +5,8 @@ Disallow: /api
 Disallow: /login
 Disallow: /register
 
-Sitemap: https://YOUR-DOMAIN.com/sitemap.xml
-Sitemap: https://YOUR-DOMAIN.com/api/sitemap
+# Primary sitemap (dynamic - all tools from database)
+Sitemap: https://ai-tools-directory-production-be45.up.railway.app/api/sitemap
 
 # Search engine bots
 User-agent: Googlebot
