@@ -7,7 +7,7 @@ import ToolCard from '../components/ToolCard';
 import Newsletter from '../components/Newsletter';
 import { CardSkeleton } from '../components/LoadingSkeleton';
 import API from '../api';
-import { HiSparkles, HiTrendingUp, HiClock, HiStar } from 'react-icons/hi';
+import { HiSparkles } from 'react-icons/hi';
 import { Helmet } from 'react-helmet-async';
 import FAQ from '../components/FAQ';
 
@@ -18,21 +18,19 @@ export default function Home() {
   const [recent, setRecent] = useState([]);
   const [toolOfDay, setToolOfDay] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [filteredLoading, setFilteredLoading] = useState(false);
   const revealRefs = useRef([]);
   revealRefs.current = [];
-  const resultsRef = useRef(null);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [featRes, allRes] = await Promise.all([
+        const [featRes, recentRes, allRes] = await Promise.all([
           API.get('/tools?featured=true&limit=3'),
+          API.get('/tools?limit=6&sort=newest'),
           API.get('/tools?limit=12&sort=newest')
         ]);
         setFeatured(featRes.data.data);
-        
+        setRecent(recentRes.data.data);
         if (allRes.data.data.length > 0) {
           const dayIndex = new Date().getDate() % allRes.data.data.length;
           setToolOfDay(allRes.data.data[dayIndex]);
@@ -45,51 +43,21 @@ export default function Home() {
     fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    const fetchFilteredTools = async () => {
-      setFilteredLoading(true);
-      try {
-        const categoryParam = (selectedCategory === 'All' || selectedCategory === '') ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
-        const res = await API.get(`/tools?limit=6&sort=newest${categoryParam}`);
-        setRecent(res.data.data);
-      } catch (err) {
-        console.error('Failed to fetch filtered tools:', err);
-      }
-      setFilteredLoading(false);
-    };
-    fetchFilteredTools();
-  }, [selectedCategory]);
-
   // Intersection Observer for scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('active');
       });
     }, { threshold: 0.1 });
-
-    revealRefs.current.forEach(el => {
-      if (el) observer.observe(el);
-    });
-
+    revealRefs.current.forEach(el => { if (el) observer.observe(el); });
     return () => observer.disconnect();
   }, [loading]);
 
   const addToRefs = (el) => {
-    if (el && !revealRefs.current.includes(el)) {
-      revealRefs.current.push(el);
-    }
+    if (el && !revealRefs.current.includes(el)) revealRefs.current.push(el);
   };
 
-  const handleCategorySelect = (cat) => {
-    setSelectedCategory(cat);
-    // Scroll to results on mobile for better UX
-    if (window.innerWidth < 768 && resultsRef.current) {
-      resultsRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="min-h-screen">
@@ -207,28 +175,29 @@ export default function Home() {
         )}
       </section>
 
-      {/* Category Filter */}
+      {/* Category Filter - clicking navigates to /tools?category=X */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 reveal" ref={addToRefs}>
-        <div className="mb-10">
-          <CategoryFilter selected={selectedCategory} onSelect={handleCategorySelect} />
+        <div className="flex items-center justify-between mb-6 border-l-4 border-primary pl-4">
+          <h2 className="text-2xl sm:text-3xl font-black text-white">🗂️ Browse by Category</h2>
+          <Link to="/tools" className="text-sm font-bold text-primary-light hover:underline">View all tools →</Link>
         </div>
+        <CategoryFilter />
       </section>
 
       {/* Recently Added */}
-      <section ref={(el) => { resultsRef.current = el; addToRefs(el); }} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal">
-        <div className="flex items-center gap-3 mb-10 border-l-4 border-secondary pl-4">
-          <h2 className="text-2xl sm:text-3xl font-black text-white">
-            {selectedCategory === 'All' ? '🕐 Recently Added' : `✨ ${selectedCategory} Tools`}
-          </h2>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal" ref={addToRefs}>
+        <div className="flex items-center justify-between mb-10 border-l-4 border-secondary pl-4">
+          <h2 className="text-2xl sm:text-3xl font-black text-white">🕐 Recently Added</h2>
+          <Link to="/tools" className="text-sm font-bold text-primary-light hover:underline">View all →</Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
-          {filteredLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
             [...Array(6)].map((_, i) => <CardSkeleton key={i} />)
           ) : recent.length > 0 ? (
             recent.map(tool => <ToolCard key={tool._id} tool={tool} />)
           ) : (
             <div className="col-span-full py-20 text-center">
-              <p className="text-gray-500 font-bold">No tools found in this category yet.</p>
+              <p className="text-gray-500 font-bold">No tools found.</p>
             </div>
           )}
         </div>
