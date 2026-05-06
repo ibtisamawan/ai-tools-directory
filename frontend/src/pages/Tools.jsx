@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import ToolCard from '../components/ToolCard';
@@ -32,14 +32,30 @@ export default function Tools() {
     { value: 'alphabetical', label: 'A-Z' },
   ];
 
+  // Memoize the active category data for SEO
+  const activeCategoryData = useMemo(() => {
+    return categories.find(c => c.name === category) || categories[0];
+  }, [category, categories]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await API.get('/categories');
         if (res.data.success) {
-          // Calculate total tools for "All" category
           const total = res.data.data.reduce((sum, c) => sum + (c.toolCount || 0), 0);
-          setCategories([{ name: 'All', toolCount: total }, ...res.data.data]);
+          setCategories([{ 
+            name: 'All', 
+            toolCount: total,
+            seoTitle: 'All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory',
+            metaDescription: 'Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing.',
+            h1: 'All AI Tools',
+            intro: 'Browse our complete collection of artificial intelligence tools across all categories and pricing models.',
+            faqs: [
+              { question: "How do I find the right AI tool?", answer: "Use our search bar to search by name or use case. Or filter by category to browse tools in your specific area of interest." },
+              { question: "What do the pricing badges mean?", answer: "Free = always free, no credit card needed. Freemium = free plan with paid upgrades. Paid = requires subscription to use." },
+              { question: "Are all tools safe to use?", answer: "We only list established legitimate AI tools from trusted companies. Always read each tool's privacy policy before signing up." }
+            ]
+          }, ...res.data.data]);
         }
       } catch (err) {
         console.error('Failed to fetch categories:', err);
@@ -73,7 +89,6 @@ export default function Tools() {
     setSearchParams(newParams);
   };
 
-  // Scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -120,21 +135,20 @@ export default function Tools() {
   return (
     <div className="min-h-screen pb-20">
       <Helmet>
-        <title>All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory</title>
-        <meta name="description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
-        <meta name="keywords" content="all AI tools, AI tools list, AI tools by category, free AI tools, paid AI tools, best AI software" />
-        <link rel="canonical" href="https://ai-tools-directory-orpin.vercel.app/tools" />
-        <meta property="og:title" content="All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory" />
-        <meta property="og:description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
-        <meta property="og:url" content="https://ai-tools-directory-orpin.vercel.app/tools" />
-        <meta name="twitter:title" content="All AI Tools - Browse 120+ AI Tools by Category | AI Tools Directory" />
-        <meta name="twitter:description" content="Browse our complete collection of 120+ AI tools. Filter by category, pricing and rating to find the perfect AI tool for writing, coding, design and marketing." />
+        <title>{activeCategoryData.seoTitle || `${category} AI Tools - Best ${category} Software 2026`}</title>
+        <meta name="description" content={activeCategoryData.metaDescription || `Browse the best AI tools for ${category}. Compare pricing and features.`} />
+        <link rel="canonical" href={`https://ai-tools-directory-orpin.vercel.app/tools${category !== 'All' ? `?category=${category}` : ''}`} />
       </Helmet>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-black text-white mb-4">All AI Tools</h1>
-          <p className="text-gray-500 font-medium max-w-xl">Browse our complete collection of artificial intelligence tools across all categories and pricing models.</p>
+          <h1 className="text-4xl font-black text-white mb-4">
+            {activeCategoryData.h1 || `AI Tools for ${category}`}
+          </h1>
+          <p className="text-gray-500 font-medium max-w-3xl leading-relaxed">
+            {activeCategoryData.intro || `Browse our complete collection of artificial intelligence tools for ${category}.`}
+          </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
@@ -249,11 +263,13 @@ export default function Tools() {
           </div>
         </div>
       </div>
-      <FAQ title="Tools Page FAQ" faqs={[
-        { q: "How do I find the right AI tool?", a: "Use our search bar to search by name or use case. Or filter by category to browse tools in your specific area of interest." },
-        { q: "What do the pricing badges mean?", a: "Free = always free, no credit card needed. Freemium = free plan with paid upgrades. Paid = requires subscription to use." },
-        { q: "Are all tools safe to use?", a: "We only list established legitimate AI tools from trusted companies. Always read each tool privacy policy before signing up." }
-      ]} />
+
+      {activeCategoryData.faqs && activeCategoryData.faqs.length > 0 && (
+        <FAQ 
+          title={`${category} FAQ`} 
+          faqs={activeCategoryData.faqs.map(f => ({ q: f.question, a: f.answer }))} 
+        />
+      )}
     </div>
   );
 }

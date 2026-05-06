@@ -40,57 +40,93 @@ app.use('/api/auth', authRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/submit', submitRoutes);
 
-// Dynamic XML Sitemap - auto-generates URLs for all tools from MongoDB
+// Comprehensive Dynamic XML Sitemap
 const SITE_URL = 'https://ai-tools-directory-orpin.vercel.app';
 app.get('/api/sitemap', async (req, res) => {
   try {
     const Tool = require('./models/Tool');
-    const tools = await Tool.find({ isActive: { $ne: false } }, 'slug _id updatedAt').lean();
+    const Blog = require('./models/Blog');
+    const Category = require('./models/Category');
+
+    const [tools, blogs, categories] = await Promise.all([
+      Tool.find({ approved: true }, 'slug updatedAt').lean(),
+      Blog.find({}, 'slug updatedAt').lean(),
+      Category.find({}, 'name updatedAt').lean()
+    ]);
 
     const staticPages = [
       { url: '/', priority: '1.0', changefreq: 'daily' },
       { url: '/tools', priority: '0.9', changefreq: 'daily' },
-      { url: '/categories', priority: '0.8', changefreq: 'weekly' },
       { url: '/blog', priority: '0.8', changefreq: 'weekly' },
-      { url: '/about', priority: '0.7', changefreq: 'monthly' },
-      { url: '/contact', priority: '0.6', changefreq: 'monthly' },
-      { url: '/submit', priority: '0.6', changefreq: 'monthly' },
-      { url: '/privacy-policy', priority: '0.5', changefreq: 'monthly' },
+      { url: '/submit', priority: '0.7', changefreq: 'monthly' },
     ];
 
     const today = new Date().toISOString().split('T')[0];
 
-    const staticUrls = staticPages.map(page => `
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+    // 1. Static Pages
+    staticPages.forEach(page => {
+      xml += `
   <url>
     <loc>${SITE_URL}${page.url}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`).join('');
+  </url>`;
+    });
 
-    const toolUrls = tools.map(tool => {
-      const slug = tool.slug || tool._id.toString();
-      const lastmod = tool.updatedAt ? tool.updatedAt.toISOString().split('T')[0] : today;
-      return `
+    // 2. Category Hubs (Programmatic SEO)
+    categories.forEach(cat => {
+      const lastmod = cat.updatedAt ? cat.updatedAt.toISOString().split('T')[0] : today;
+      xml += `
   <url>
-    <loc>${SITE_URL}/tools/${slug}</loc>
+    <loc>${SITE_URL}/tools?category=${encodeURIComponent(cat.name)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`;
+    });
+
+    // 3. Blog Posts
+    blogs.forEach(post => {
+      const lastmod = post.updatedAt ? post.updatedAt.toISOString().split('T')[0] : today;
+      xml += `
+  <url>
+    <loc>${SITE_URL}/blog/${post.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
-    }).join('');
+    });
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${toolUrls}
-</urlset>`;
+    // 4. Tool Details
+    tools.forEach(tool => {
+      const lastmod = tool.updatedAt ? tool.updatedAt.toISOString().split('T')[0] : today;
+      xml += `
+  <url>
+    <loc>${SITE_URL}/tools/${tool.slug || tool._id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+    });
+
+    xml += '\n</urlset>';
 
     res.setHeader('Content-Type', 'application/xml');
-    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+    res.setHeader('Cache-Control', 'public, max-age=3600');
     res.send(xml);
   } catch (err) {
     console.error('Sitemap error:', err.message);
     res.status(500).send('Error generating sitemap');
   }
+});
+
+// Standard Sitemap location for Search Engines
+app.get('/sitemap.xml', (req, res) => {
+  res.redirect('/api/sitemap');
 });
 
 // Health check
